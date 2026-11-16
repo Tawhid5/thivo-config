@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 10,
-  "updatedAt": "2026-11-16T16:01:38.853Z",
+  "schemaVersion": 11,
+  "updatedAt": "2026-11-16T16:05:21.739Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -44,7 +44,7 @@
     "geminiModel": "gemini-2.5-flash"
   },
   "announcement": {
-    "enabled": true,
+    "enabled": false,
     "type": "warning",
     "title": "What about",
     "message": "Hello world ",
@@ -61,7 +61,7 @@
     "forceUpdate": false
   },
   "maintenance": {
-    "enabled": false,
+    "enabled": true,
     "title": "Scheduled Maintenance",
     "message": "THIVO is upgrading servers. Please check back shortly.",
     "supportUrl": ""
