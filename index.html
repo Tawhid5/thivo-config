@@ -21,27 +21,27 @@
     body {
       margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 45%);
-      color: var(--text); min-height: 100vh; padding-bottom: 84px;
+      color: var(--text); min-height: 100vh; padding-bottom: 88px;
     }
     .topbar {
       position: sticky; top: 0; z-index: 40;
       display: flex; align-items: center; justify-content: space-between; gap: 10px;
-      padding: 12px 16px; background: rgba(7, 10, 18, 0.82);
+      padding: 12px 16px; background: rgba(7, 10, 18, 0.85);
       backdrop-filter: blur(18px); border-bottom: 1px solid var(--border);
     }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; letter-spacing: 0.4px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; letter-spacing: 0.4px; }
     .brand-dot {
       width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, #f59e0b, #d97706);
       display: grid; place-items: center; color: #000; font-weight: 900; font-size: 14px;
     }
-    .badge { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: var(--amber-soft); color: var(--amber); font-weight: 700; }
+    .badge { font-size: 10px; padding: 3px 8px; border-radius: 999px; background: var(--amber-soft); color: var(--amber); font-weight: 700; }
     .container { max-width: 780px; margin: 0 auto; padding: 14px; }
     .card {
       background: var(--surface); backdrop-filter: blur(16px);
       border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px;
     }
     .card-title { font-size: 15px; font-weight: 700; margin: 0 0 4px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .card-sub { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
+    .card-sub { font-size: 12px; color: var(--muted); margin: 0 0 12px; line-height: 1.4; }
     label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 5px; font-weight: 600; }
     input, select, textarea {
       width: 100%; background: rgba(7, 10, 18, 0.72); color: var(--text);
@@ -58,7 +58,9 @@
       transition: opacity .15s, transform .1s;
     }
     .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn-primary { background: linear-gradient(135deg, #f59e0b, #d97706); color: #0b0f1a; }
+    .btn-primary.dirty { box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.45); }
     .btn-glass { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--border); }
     .btn-danger { background: rgba(239,68,68,0.16); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
     .btn-sm { padding: 7px 10px; font-size: 12px; border-radius: 9px; }
@@ -89,7 +91,7 @@
     .bottom-nav {
       position: fixed; bottom: 10px; left: 10px; right: 10px; z-index: 40;
       max-width: 760px; margin: 0 auto;
-      display: flex; background: rgba(11, 15, 26, 0.9); backdrop-filter: blur(20px);
+      display: flex; background: rgba(11, 15, 26, 0.92); backdrop-filter: blur(20px);
       border: 1px solid var(--border); border-radius: 20px; padding: 5px;
     }
     .nav-btn {
@@ -101,14 +103,16 @@
       position: fixed; top: 66px; left: 50%; transform: translateX(-50%); z-index: 90;
       padding: 10px 16px; border-radius: 999px; font-size: 13px; font-weight: 700;
       background: #0f172a; border: 1px solid var(--amber); color: #fff;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none; white-space: nowrap; max-width: 92vw;
+      overflow: hidden; text-overflow: ellipsis;
     }
     .hidden { display: none !important; }
-    .pill { font-size: 10px; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--muted); }
+    .pill { font-size: 10px; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--muted); margin-left: 4px; }
     .pill.star { background: var(--amber-soft); color: var(--amber); }
+    .hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
     pre {
       background: #04060c; padding: 12px; border-radius: 12px; overflow: auto;
-      font-size: 11px; color: #cbd5e1; max-height: 340px; border: 1px solid var(--border);
+      font-size: 11px; color: #cbd5e1; max-height: 360px; border: 1px solid var(--border);
     }
   </style>
 </head>
@@ -119,7 +123,7 @@
     <div class="brand">
       <div class="brand-dot">T</div>
       <div>
-        <div>THIVO <span class="badge">ADMIN</span></div>
+        <div>THIVO <span class="badge">ADMIN</span> <span id="schemaBadge" class="badge hidden">v1</span></div>
       </div>
     </div>
     <div id="topActions" class="row hidden" style="flex:0 0 auto;">
@@ -149,10 +153,10 @@
 
     <!-- DASHBOARD VIEW -->
     <section id="dashView" class="hidden">
-      <!-- TAB 1: SOURCES -->
+      <!-- TAB 1: SOURCES & PLAYBACK -->
       <div id="tab-sources" class="tab-pane">
         <div class="card">
-          <div class="card-title">Add Stremio Addon (PlavioHD / CNCVerse / Any)</div>
+          <div class="card-title">Add Stremio Addon (PlavioHD / CNCVerse / Torrentio)</div>
           <p class="card-sub">Paste manifest.json or stremio:// URL. Test before publishing live.</p>
           <label>Addon Manifest URL</label>
           <div class="row">
@@ -183,45 +187,101 @@
 
         <div class="card">
           <div class="card-title">Built-In Stream Engines & Playback</div>
-          <p class="card-sub">Toggle built-in app extractors remotely if any server breaks.</p>
+          <p class="card-sub">Toggle built-in app extractors & playback tuning remotely without an APK release.</p>
           <div id="builtInToggles"></div>
+
           <label>Default Recommended Provider ID</label>
-          <select id="defaultProviderSelect" onchange="cfg.defaultProviderId = this.value"></select>
-          <label>Default Preferred Stream Quality</label>
-          <select id="prefQuality" onchange="cfg.playback.preferredDefaultQuality = this.value">
-            <option value="1080p">1080p Full HD (Recommended)</option>
-            <option value="720p">720p Data Saver</option>
-            <option value="Auto">Auto</option>
-          </select>
+          <select id="defaultProviderSelect" onchange="cfg.defaultProviderId = this.value || null; markDirty(); renderAddons(); renderCustomProviders();"></select>
+
+          <div class="row">
+            <div>
+              <label>Preferred Stream Quality</label>
+              <select id="prefQuality" onchange="cfg.playback.preferredDefaultQuality = this.value; markDirty();">
+                <option value="2160p">2160p 4K</option>
+                <option value="1080p">1080p Full HD (Recommended)</option>
+                <option value="720p">720p Data Saver</option>
+                <option value="480p">480p Low Bandwidth</option>
+                <option value="Auto">Auto</option>
+              </select>
+            </div>
+            <div>
+              <label>Provider Timeout (3–20s)</label>
+              <input id="providerTimeoutInput" type="number" min="3" max="20" value="7"
+                oninput="cfg.playback.providerTimeoutSeconds = Math.min(20, Math.max(3, Number(this.value || 7))); markDirty();" />
+            </div>
+          </div>
+
           <div class="toggle-row" style="margin-top:8px;">
             <div>
               <div class="toggle-title">Prefer H.264 / MP4 over 10-bit HEVC</div>
-              <div class="toggle-desc">Prevents buffering & audio issues on mid-range phones</div>
+              <div class="toggle-desc">Prevents buffering & decoder audio issues on mid-range phones</div>
             </div>
             <div id="swH264" class="switch" onclick="toggleBool('playback.preferH264OverHevc', this)"></div>
           </div>
+
+          <label>Remote Blocked Stream Hosts (comma separated)</label>
+          <input id="blockedHostsInput" placeholder="e.g. badcdn.xyz, spamhost.net" oninput="updateBlockedHosts()" />
+          <div class="hint">Any stream URL containing these host substrings is filtered out live across all providers.</div>
         </div>
 
         <div class="card">
-          <div class="card-title">Custom Direct / JSON Endpoints</div>
-          <p class="card-sub">Push custom scraper templates ({tmdb}, {imdb}, {season}, {episode}).</p>
+          <div class="card-title">Custom Direct / JSON / Embed Endpoints</div>
+          <p class="card-sub">Supported placeholders: {tmdbId} (or {tmdb}), {imdbId} (or {imdb}), {title}, {year}, {season}, {episode}</p>
           <div class="row">
-            <input id="custName" placeholder="Provider Name" />
-            <input id="custUrl" placeholder="https://api.site/watch/{tmdb}" />
+            <div>
+              <label>Provider Name</label>
+              <input id="custName" placeholder="e.g. FastCloud Resolver" />
+            </div>
+            <div>
+              <label>Mode</label>
+              <select id="custMode" onchange="toggleCustJsonField()">
+                <option value="auto">Auto Detect</option>
+                <option value="json_api">JSON API</option>
+                <option value="direct">Direct HLS / MP4</option>
+                <option value="embed">Web Embed</option>
+              </select>
+            </div>
           </div>
-          <button class="btn btn-glass btn-sm" style="margin-top:8px;width:100%;" onclick="addCustomProvider()">+ Add Custom Endpoint</button>
-          <div id="customList" style="margin-top:10px;"></div>
+          <label>Endpoint Template URL</label>
+          <input id="custUrl" placeholder="https://api.site/watch/{tmdbId}?s={season}&e={episode}" />
+          <div class="row">
+            <div>
+              <label>Badge (optional)</label>
+              <input id="custBadge" placeholder="e.g. Hindi / 1080p" />
+            </div>
+            <div id="custJsonPathWrap">
+              <label>JSON URL Path (optional)</label>
+              <input id="custJsonPath" placeholder="e.g. sources[0].url" />
+            </div>
+          </div>
+          <button class="btn btn-glass btn-sm" style="margin-top:12px;width:100%;" onclick="addCustomProvider()">+ Add Custom Endpoint</button>
+          <div id="customList" style="margin-top:12px;"></div>
         </div>
       </div>
 
       <!-- TAB 2: CATALOG -->
       <div id="tab-catalog" class="tab-pane hidden">
         <div class="card">
-          <div class="card-title">Home Screen Rails Visibility</div>
-          <p class="card-sub">Turn individual Home sections ON or OFF live.</p>
-          <div id="catalogToggles"></div>
+          <div class="card-title">Catalog Region & Home Screen Rails</div>
+          <p class="card-sub">Change TMDB discovery region and toggle all Home screen rails live.</p>
+          <label>Catalog Region (TMDB Watch Region)</label>
+          <div class="row">
+            <select id="catalogRegionSelect" onchange="selectCatalogRegion(this.value)">
+              <option value="IN">IN — India (Hindi / South / OTT)</option>
+              <option value="BD">BD — Bangladesh</option>
+              <option value="US">US — United States</option>
+              <option value="GB">GB — United Kingdom</option>
+              <option value="AE">AE — UAE</option>
+              <option value="MY">MY — Malaysia</option>
+              <option value="SG">SG — Singapore</option>
+              <option value="CUSTOM">Custom 2-Letter Code...</option>
+            </select>
+            <input id="catalogRegionInput" maxlength="2" style="max-width:96px;text-transform:uppercase;"
+              placeholder="IN" oninput="cfg.catalog.region = (this.value || 'IN').toUpperCase().trim(); markDirty();" />
+          </div>
+          <div id="catalogToggles" style="margin-top:8px;"></div>
           <label>Pinned Hero TMDB IDs (comma separated, e.g. movie:550, tv:1399)</label>
-          <input id="pinnedHeroInput" placeholder="movie:550, tv:1399" onchange="updatePinnedHero()" />
+          <input id="pinnedHeroInput" placeholder="movie:550, tv:1399" oninput="updatePinnedHero()" />
         </div>
 
         <div class="card">
@@ -232,11 +292,11 @@
             <div id="swCurated" class="switch" onclick="toggleBool('catalog.curatedSection.enabled', this)"></div>
           </div>
           <label>Row Title</label>
-          <input id="curatedTitle" oninput="cfg.catalog.curatedSection.title = this.value" />
+          <input id="curatedTitle" oninput="cfg.catalog.curatedSection.title = this.value; markDirty();" />
           <label>Subtitle</label>
-          <input id="curatedSub" oninput="cfg.catalog.curatedSection.subtitle = this.value" />
+          <input id="curatedSub" oninput="cfg.catalog.curatedSection.subtitle = this.value; markDirty();" />
           <label>TMDB Items (e.g. movie:550, tv:94605)</label>
-          <input id="curatedItems" placeholder="movie:550, tv:94605" onchange="updateCuratedItems()" />
+          <input id="curatedItems" placeholder="movie:550, tv:94605" oninput="updateCuratedItems()" />
         </div>
       </div>
 
@@ -250,8 +310,15 @@
         <div class="card">
           <div class="card-title">AI Translation Engine</div>
           <p class="card-sub">Update Gemini model alias remotely if Google releases newer models.</p>
+          <label>Quick Select Preset</label>
+          <select id="geminiPresetSelect" onchange="if(this.value){ document.getElementById('geminiModelInput').value=this.value; cfg.subtitles.geminiModel=this.value; markDirty(); }">
+            <option value="gemini-2.5-flash">gemini-2.5-flash (Recommended • Fast)</option>
+            <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite (Ultra-Fast)</option>
+            <option value="gemini-2.5-pro">gemini-2.5-pro (Highest Accuracy)</option>
+            <option value="">Custom Alias Below...</option>
+          </select>
           <label>Active Gemini Model Alias</label>
-          <input id="geminiModelInput" oninput="cfg.subtitles.geminiModel = this.value.trim()" />
+          <input id="geminiModelInput" oninput="cfg.subtitles.geminiModel = this.value.trim() || 'gemini-2.5-flash'; syncGeminiPreset(); markDirty();" />
         </div>
       </div>
 
@@ -264,19 +331,26 @@
             <div><div class="toggle-title">Show Announcement</div></div>
             <div id="swAnnounce" class="switch" onclick="toggleBool('announcement.enabled', this)"></div>
           </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-title">Allow Users to Dismiss</div>
+              <div class="toggle-desc">Turn OFF for sticky/important notices</div>
+            </div>
+            <div id="swAnnDismiss" class="switch" onclick="toggleBool('announcement.dismissible', this)"></div>
+          </div>
           <label>Banner Type</label>
-          <select id="annType" onchange="cfg.announcement.type = this.value">
-            <option value="info">Info (Blue/Glass)</option>
+          <select id="annType" onchange="cfg.announcement.type = this.value; markDirty();">
+            <option value="info">Info (Glass)</option>
             <option value="promo">Highlight (Amber Gold)</option>
             <option value="warning">Alert (Red)</option>
           </select>
           <label>Title (Bangla / English)</label>
-          <input id="annTitle" oninput="cfg.announcement.title = this.value" />
+          <input id="annTitle" oninput="cfg.announcement.title = this.value; markDirty();" />
           <label>Message</label>
-          <textarea id="annMsg" oninput="cfg.announcement.message = this.value"></textarea>
+          <textarea id="annMsg" oninput="cfg.announcement.message = this.value; markDirty();"></textarea>
           <div class="row">
-            <div><label>Button Label (optional)</label><input id="annBtnLabel" oninput="cfg.announcement.actionLabel = this.value" /></div>
-            <div><label>Action URL (optional)</label><input id="annBtnUrl" oninput="cfg.announcement.actionUrl = this.value" /></div>
+            <div><label>Button Label (optional)</label><input id="annBtnLabel" oninput="cfg.announcement.actionLabel = this.value || null; markDirty();" /></div>
+            <div><label>Action URL (optional)</label><input id="annBtnUrl" oninput="cfg.announcement.actionUrl = this.value || null; markDirty();" /></div>
           </div>
         </div>
 
@@ -288,13 +362,16 @@
             <div id="swUpdate" class="switch" onclick="toggleBool('appUpdate.enabled', this)"></div>
           </div>
           <div class="row">
-            <div><label>Latest Version Code (Int)</label><input id="updCode" type="number" oninput="cfg.appUpdate.latestVersionCode = Number(this.value||1)" /></div>
-            <div><label>Version Name (e.g. 1.2)</label><input id="updName" oninput="cfg.appUpdate.latestVersionName = this.value" /></div>
+            <div><label>Latest Version Code (Int)</label><input id="updCode" type="number" oninput="cfg.appUpdate.latestVersionCode = Number(this.value||1); markDirty();" /></div>
+            <div><label>Version Name (e.g. 1.2)</label><input id="updName" oninput="cfg.appUpdate.latestVersionName = this.value; markDirty();" /></div>
           </div>
+          <label>Min Supported Version Code (0 = No Floor)</label>
+          <input id="updMinCode" type="number" min="0" oninput="cfg.appUpdate.minSupportedVersionCode = Math.max(0, Number(this.value||0)); markDirty();" />
+          <div class="hint">Any user with APK versionCode lower than this number will receive a mandatory update lock.</div>
           <label>Direct APK Download URL</label>
-          <input id="updUrl" placeholder="https://github.com/Tawhid5/Thivo/releases/..." oninput="cfg.appUpdate.apkUrl = this.value" />
+          <input id="updUrl" placeholder="https://github.com/Tawhid5/Thivo/releases/..." oninput="cfg.appUpdate.apkUrl = this.value; markDirty();" />
           <label>What's New / Changelog</label>
-          <textarea id="updNotes" oninput="cfg.appUpdate.changelog = this.value"></textarea>
+          <textarea id="updNotes" oninput="cfg.appUpdate.changelog = this.value; markDirty();"></textarea>
           <div class="toggle-row">
             <div><div class="toggle-title">Force Update (Block older APK)</div></div>
             <div id="swForceUpd" class="switch" onclick="toggleBool('appUpdate.forceUpdate', this)"></div>
@@ -307,8 +384,10 @@
             <div><div class="toggle-title">Enable Maintenance Screen</div></div>
             <div id="swMaint" class="switch" onclick="toggleBool('maintenance.enabled', this)"></div>
           </div>
-          <label>Title</label><input id="maintTitle" oninput="cfg.maintenance.title = this.value" />
-          <label>Message</label><textarea id="maintMsg" oninput="cfg.maintenance.message = this.value"></textarea>
+          <label>Title</label><input id="maintTitle" oninput="cfg.maintenance.title = this.value; markDirty();" />
+          <label>Message</label><textarea id="maintMsg" oninput="cfg.maintenance.message = this.value; markDirty();"></textarea>
+          <label>Support / Telegram URL (optional "Open Support" button)</label>
+          <input id="maintSupportUrl" placeholder="https://t.me/..." oninput="cfg.maintenance.supportUrl = this.value.trim() || null; markDirty();" />
         </div>
       </div>
 
@@ -316,7 +395,7 @@
       <div id="tab-json" class="tab-pane hidden">
         <div class="card">
           <div class="card-title">Live config.json Preview</div>
-          <p class="card-sub">Last synced SHA: <span id="shaLabel">-</span></p>
+          <p class="card-sub">Last synced SHA: <span id="shaLabel">-</span> • Updated: <span id="updatedAtLabel">-</span></p>
           <div class="row" style="margin-bottom:10px;">
             <button class="btn btn-glass btn-sm" onclick="copyJson()">Copy JSON</button>
             <button class="btn btn-glass btn-sm" onclick="downloadJson()">Download Backup</button>
@@ -339,6 +418,7 @@
     let auth = { owner: 'Tawhid5', repo: 'thivo-config', branch: 'main', token: '' };
     let currentSha = '';
     let cfg = {};
+    let isDirty = false;
 
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     function toBase64Utf8(str) {
@@ -358,6 +438,16 @@
       el.textContent = msg; el.style.display = 'block';
       clearTimeout(window._t); window._t = setTimeout(() => el.style.display = 'none', 2800);
     }
+    function markDirty(dirty = true) {
+      isDirty = dirty;
+      const btn = document.getElementById('publishBtn');
+      if (!btn) return;
+      btn.classList.toggle('dirty', dirty);
+      if (!btn.disabled) {
+        btn.textContent = dirty ? 'Publish Live •' : 'Publish Live';
+      }
+      renderJsonPreview();
+    }
     function getPath(path) { return path.split('.').reduce((o, k) => o?.[k], cfg); }
     function setPath(path, val) {
       const parts = path.split('.');
@@ -369,7 +459,7 @@
       const next = !Boolean(getPath(path));
       setPath(path, next);
       el.classList.toggle('on', next);
-      renderJsonPreview();
+      markDirty();
     }
     function switchTab(id, btn) {
       document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
@@ -399,33 +489,76 @@
         toast('Loading live config...');
         const url = `https://api.github.com/repos/${auth.owner}/${auth.repo}/contents/config.json?ref=${auth.branch}&_=${Date.now()}`;
         const r = await fetch(url, { headers: { Authorization: `Bearer ${auth.token}`, Accept: 'application/vnd.github+json' } });
-        if (!r.ok) throw new Error('HTTP ' + r.status + ' — Check token & repo permissions');
-        const data = await r.json();
-        currentSha = data.sha;
-        cfg = JSON.parse(fromBase64Utf8(data.content));
+        if (r.status === 404) {
+          currentSha = '';
+          cfg = {};
+          toast('No config.json yet — initialized defaults (Publish to create)');
+        } else if (!r.ok) {
+          throw new Error('HTTP ' + r.status + ' — Check token & repo permissions');
+        } else {
+          const data = await r.json();
+          currentSha = data.sha || '';
+          cfg = JSON.parse(fromBase64Utf8(data.content));
+          toast('Live config loaded ✓');
+        }
         ensureDefaults();
         document.getElementById('loginView').classList.add('hidden');
         document.getElementById('dashView').classList.remove('hidden');
         document.getElementById('topActions').classList.remove('hidden');
         document.getElementById('bottomNav').classList.remove('hidden');
+        document.getElementById('schemaBadge').classList.remove('hidden');
         renderAll();
-        toast('Live config loaded ✓');
+        markDirty(r.status === 404);
       } catch (e) {
         toast('Error: ' + e.message);
       }
     }
 
     function ensureDefaults() {
-      cfg.builtInProviders = cfg.builtInProviders || { cineos: true, stela: true, vz: true, banglaHindiIndex: true };
-      cfg.remoteAddons = cfg.remoteAddons || [];
-      cfg.remoteCustomProviders = cfg.remoteCustomProviders || [];
-      cfg.playback = cfg.playback || { preferredDefaultQuality: '1080p', preferH264OverHevc: true };
-      cfg.catalog = cfg.catalog || { curatedSection: { enabled: false, title: "Editor's Picks", subtitle: "", items: [] } };
-      cfg.catalog.curatedSection = cfg.catalog.curatedSection || { enabled: false, title: "Editor's Picks", subtitle: "", items: [] };
-      cfg.subtitles = cfg.subtitles || { openSubtitlesV3: true, openSubtitlesRest: true, subtitleCat: true, yify: true, subdl: true, subsource: true, inStream: true, autoLoadBangla: true, geminiModel: 'gemini-2.5-flash' };
-      cfg.announcement = cfg.announcement || { enabled: false, type: 'info', title: '', message: '', actionLabel: '', actionUrl: '', dismissible: true };
-      cfg.appUpdate = cfg.appUpdate || { enabled: false, latestVersionCode: 1, latestVersionName: '1.0', apkUrl: '', changelog: '', forceUpdate: false };
-      cfg.maintenance = cfg.maintenance || { enabled: false, title: '', message: '', supportUrl: '' };
+      cfg.schemaVersion = cfg.schemaVersion || 1;
+      cfg.updatedAt = cfg.updatedAt || '';
+      cfg.builtInProviders = {
+        cineos: true, stela: true, vz: true, banglaHindiIndex: true, trailerEmbed: true,
+        ...(cfg.builtInProviders || {})
+      };
+      if (cfg.defaultProviderId === undefined) cfg.defaultProviderId = null;
+      cfg.remoteAddons = Array.isArray(cfg.remoteAddons) ? cfg.remoteAddons : [];
+      cfg.remoteCustomProviders = Array.isArray(cfg.remoteCustomProviders) ? cfg.remoteCustomProviders : [];
+      cfg.playback = {
+        preferredDefaultQuality: '1080p', preferH264OverHevc: true,
+        providerTimeoutSeconds: 7, blockedHosts: [],
+        ...(cfg.playback || {})
+      };
+      cfg.catalog = {
+        region: 'IN',
+        showHeroCarousel: true, showContinueWatching: true, showTrendingNow: true,
+        showLatestBollywood: true, showHindiWebSeries: true, showSouthHindiDubbed: true,
+        showHollywoodHindiDubbed: true, showTopSeries: true, showKdramaAsian: true, showActionCrime: true,
+        pinnedHeroIds: [],
+        ...(cfg.catalog || {})
+      };
+      cfg.catalog.curatedSection = {
+        enabled: false, title: "Editor's Picks", subtitle: "", items: [],
+        ...(cfg.catalog.curatedSection || {})
+      };
+      cfg.subtitles = {
+        openSubtitlesV3: true, openSubtitlesRest: true, subtitleCat: true, yify: true,
+        subdl: true, subsource: true, inStream: true, autoLoadBangla: true, geminiModel: 'gemini-2.5-flash',
+        ...(cfg.subtitles || {})
+      };
+      cfg.announcement = {
+        enabled: false, type: 'info', title: '', message: '', actionLabel: null, actionUrl: null, dismissible: true,
+        ...(cfg.announcement || {})
+      };
+      cfg.appUpdate = {
+        enabled: false, latestVersionCode: 1, latestVersionName: '1.0', apkUrl: '', changelog: '',
+        forceUpdate: false, minSupportedVersionCode: 0,
+        ...(cfg.appUpdate || {})
+      };
+      cfg.maintenance = {
+        enabled: false, title: 'Maintenance in Progress', message: '', supportUrl: null,
+        ...(cfg.maintenance || {})
+      };
     }
 
     function normalizeManifestUrl(raw) {
@@ -470,7 +603,7 @@
       document.getElementById('newAddonName').value = '';
       document.getElementById('newAddonBadge').value = '';
       document.getElementById('addonTestMsg').textContent = '';
-      renderAddons(); renderDefaultProviderSelect();
+      renderAddons(); renderDefaultProviderSelect(); markDirty();
       toast('Addon added (tap Publish Live to save)');
     }
 
@@ -481,17 +614,58 @@
       cfg.remoteAddons[idx] = cfg.remoteAddons[target];
       cfg.remoteAddons[target] = tmp;
       cfg.remoteAddons.forEach((a, i) => a.priority = i + 1);
-      renderAddons();
+      renderAddons(); markDirty();
+    }
+
+    function setDefaultAddon(idx) {
+      const target = cfg.remoteAddons[idx];
+      if (!target) return;
+      cfg.defaultProviderId = cfg.defaultProviderId === target.id ? null : target.id;
+      renderAddons(); renderCustomProviders(); renderDefaultProviderSelect(); markDirty();
+    }
+
+    function deleteAddon(idx) {
+      const removed = cfg.remoteAddons.splice(idx, 1)[0];
+      cfg.remoteAddons.forEach((a, i) => a.priority = i + 1);
+      if (removed && cfg.defaultProviderId === removed.id) cfg.defaultProviderId = null;
+      renderAddons(); renderDefaultProviderSelect(); markDirty();
+    }
+
+    function toggleCustJsonField() {
+      const mode = document.getElementById('custMode').value;
+      document.getElementById('custJsonPathWrap').style.display = (mode === 'json_api' || mode === 'auto') ? 'block' : 'none';
     }
 
     function addCustomProvider() {
       const name = document.getElementById('custName').value.trim();
       const url = document.getElementById('custUrl').value.trim();
+      const mode = document.getElementById('custMode').value;
+      const badge = document.getElementById('custBadge').value.trim();
+      const jsonPath = document.getElementById('custJsonPath').value.trim();
       if (!name || !url) return toast('Enter Name and Endpoint URL');
-      cfg.remoteCustomProviders.push({ id: 'cust_' + Date.now(), name, endpointTemplate: url, enabled: true });
+      cfg.remoteCustomProviders.push({
+        id: 'cust_' + Date.now(),
+        name, endpointTemplate: url, enabled: true,
+        mode, badge: badge || null, jsonUrlFieldPath: jsonPath
+      });
       document.getElementById('custName').value = '';
       document.getElementById('custUrl').value = '';
-      renderCustomProviders(); renderDefaultProviderSelect();
+      document.getElementById('custBadge').value = '';
+      document.getElementById('custJsonPath').value = '';
+      renderCustomProviders(); renderDefaultProviderSelect(); markDirty();
+    }
+
+    function setDefaultCustom(idx) {
+      const target = cfg.remoteCustomProviders[idx];
+      if (!target) return;
+      cfg.defaultProviderId = cfg.defaultProviderId === target.id ? null : target.id;
+      renderAddons(); renderCustomProviders(); renderDefaultProviderSelect(); markDirty();
+    }
+
+    function deleteCustomProvider(idx) {
+      const removed = cfg.remoteCustomProviders.splice(idx, 1)[0];
+      if (removed && cfg.defaultProviderId === removed.id) cfg.defaultProviderId = null;
+      renderCustomProviders(); renderDefaultProviderSelect(); markDirty();
     }
 
     function renderToggleList(containerId, items) {
@@ -518,14 +692,14 @@
               ${a.badge ? `<span class="pill">${esc(a.badge)}</span>` : ''}
               ${cfg.defaultProviderId === a.id ? `<span class="pill star">★ Default</span>` : ''}
             </div>
-            <div class="switch ${a.enabled ? 'on' : ''}" onclick="cfg.remoteAddons[${i}].enabled=!cfg.remoteAddons[${i}].enabled; renderAddons()"></div>
+            <div class="switch ${a.enabled ? 'on' : ''}" onclick="cfg.remoteAddons[${i}].enabled=!cfg.remoteAddons[${i}].enabled; renderAddons(); markDirty();"></div>
           </div>
           <div class="addon-url">${esc(a.manifestUrl)}</div>
           <div class="actions">
             <button class="btn btn-glass btn-sm" onclick="moveAddon(${i},-1)">▲</button>
             <button class="btn btn-glass btn-sm" onclick="moveAddon(${i},1)">▼</button>
-            <button class="btn btn-glass btn-sm" onclick="cfg.defaultProviderId='${esc(a.id)}'; renderAddons(); renderDefaultProviderSelect()">★ Pin Default</button>
-            <button class="btn btn-danger btn-sm" onclick="cfg.remoteAddons.splice(${i},1); renderAddons(); renderDefaultProviderSelect()">Delete</button>
+            <button class="btn btn-glass btn-sm" onclick="setDefaultAddon(${i})">${cfg.defaultProviderId === a.id ? '★ Unpin' : '★ Pin Default'}</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteAddon(${i})">Delete</button>
           </div>
         </div>
       `).join('');
@@ -533,39 +707,73 @@
 
     function renderCustomProviders() {
       const el = document.getElementById('customList');
+      if (!cfg.remoteCustomProviders.length) {
+        el.innerHTML = '<div style="color:var(--muted);font-size:12px;">No remote custom endpoints added.</div>';
+        return;
+      }
       el.innerHTML = cfg.remoteCustomProviders.map((c, i) => `
         <div class="addon-item">
           <div class="addon-head">
-            <strong>${esc(c.name)}</strong>
-            <div class="row" style="flex:0 0 auto;">
-              <div class="switch ${c.enabled ? 'on' : ''}" onclick="cfg.remoteCustomProviders[${i}].enabled=!cfg.remoteCustomProviders[${i}].enabled; renderCustomProviders()"></div>
-              <button class="btn btn-danger btn-sm" onclick="cfg.remoteCustomProviders.splice(${i},1); renderCustomProviders()">X</button>
+            <div>
+              <strong>${esc(c.name)}</strong>
+              <span class="pill">${esc(c.mode || 'auto')}</span>
+              ${c.badge ? `<span class="pill">${esc(c.badge)}</span>` : ''}
+              ${cfg.defaultProviderId === c.id ? `<span class="pill star">★ Default</span>` : ''}
             </div>
+            <div class="switch ${c.enabled ? 'on' : ''}" onclick="cfg.remoteCustomProviders[${i}].enabled=!cfg.remoteCustomProviders[${i}].enabled; renderCustomProviders(); markDirty();"></div>
           </div>
-          <div class="addon-url">${esc(c.endpointTemplate)}</div>
+          <div class="addon-url">${esc(c.endpointTemplate)}${c.jsonUrlFieldPath ? `<br/>JSON Path: ${esc(c.jsonUrlFieldPath)}` : ''}</div>
+          <div class="actions">
+            <button class="btn btn-glass btn-sm" onclick="setDefaultCustom(${i})">${cfg.defaultProviderId === c.id ? '★ Unpin' : '★ Pin Default'}</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteCustomProvider(${i})">Delete</button>
+          </div>
         </div>
       `).join('');
     }
 
     function renderDefaultProviderSelect() {
       const opts = [
+        ['', 'Auto (Stream Quality Rank)'],
         ['cineos', 'CineOS (Built-in)'],
         ['stela', 'Stela (Built-in)'],
         ['vz', 'VZ Direct (Built-in)'],
         ['banglaHindiIndex', 'Index RSS (Built-in)'],
+        ['trailerEmbed', 'Trailer & 3P Embed (Built-in)'],
         ...cfg.remoteAddons.map(a => [a.id, 'Addon: ' + a.name]),
         ...cfg.remoteCustomProviders.map(c => [c.id, 'Custom: ' + c.name])
       ];
       document.getElementById('defaultProviderSelect').innerHTML = opts.map(([v, l]) =>
-        `<option value="${esc(v)}" ${cfg.defaultProviderId === v ? 'selected' : ''}>${esc(l)}</option>`
+        `<option value="${esc(v)}" ${(cfg.defaultProviderId || '') === v ? 'selected' : ''}>${esc(l)}</option>`
       ).join('');
     }
 
     function updatePinnedHero() {
       cfg.catalog.pinnedHeroIds = document.getElementById('pinnedHeroInput').value.split(',').map(s => s.trim()).filter(Boolean);
+      markDirty();
     }
     function updateCuratedItems() {
       cfg.catalog.curatedSection.items = document.getElementById('curatedItems').value.split(',').map(s => s.trim()).filter(Boolean);
+      markDirty();
+    }
+    function updateBlockedHosts() {
+      cfg.playback.blockedHosts = document.getElementById('blockedHostsInput').value.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+      markDirty();
+    }
+    function selectCatalogRegion(val) {
+      const inp = document.getElementById('catalogRegionInput');
+      if (val && val !== 'CUSTOM') {
+        inp.value = val;
+        cfg.catalog.region = val;
+        markDirty();
+      } else {
+        inp.focus();
+      }
+    }
+    function syncGeminiPreset() {
+      const val = (cfg.subtitles.geminiModel || '').trim();
+      const sel = document.getElementById('geminiPresetSelect');
+      const presets = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.5-pro'];
+      sel.value = presets.includes(val) ? val : '';
     }
 
     function renderAll() {
@@ -576,10 +784,19 @@
         ['builtInProviders.cineos', 'CineOS Engine', 'Multi-audio direct MP4/HLS'],
         ['builtInProviders.stela', 'Stela Resolver', 'Fast direct stream fallback'],
         ['builtInProviders.vz', 'VZ Resolver', 'Secondary direct stream'],
-        ['builtInProviders.banglaHindiIndex', 'Index RSS Engine', 'Bangla & Hindi mirror links']
+        ['builtInProviders.banglaHindiIndex', 'Index RSS Engine', 'Bangla & Hindi mirror links'],
+        ['builtInProviders.trailerEmbed', 'Trailer & 3P Embed Backups', 'YouTube trailers + FrameXTV / VidLink / VidSrc / AutoEmbed']
       ]);
       document.getElementById('prefQuality').value = cfg.playback.preferredDefaultQuality || '1080p';
+      document.getElementById('providerTimeoutInput').value = cfg.playback.providerTimeoutSeconds || 7;
       document.getElementById('swH264').classList.toggle('on', Boolean(cfg.playback.preferH264OverHevc));
+      document.getElementById('blockedHostsInput').value = (cfg.playback.blockedHosts || []).join(', ');
+
+      const reg = (cfg.catalog.region || 'IN').toUpperCase();
+      document.getElementById('catalogRegionInput').value = reg;
+      const regSelect = document.getElementById('catalogRegionSelect');
+      const knownRegions = ['IN', 'BD', 'US', 'GB', 'AE', 'MY', 'SG'];
+      regSelect.value = knownRegions.includes(reg) ? reg : 'CUSTOM';
 
       renderToggleList('catalogToggles', [
         ['catalog.showHeroCarousel', 'Hero Backdrop Carousel'],
@@ -587,9 +804,11 @@
         ['catalog.showTrendingNow', 'Trending Now'],
         ['catalog.showLatestBollywood', 'Latest Bollywood & Hindi Hits'],
         ['catalog.showHindiWebSeries', 'Hindi Web Series'],
-        ['catalog.showSouthHindiDubbed', 'South Indian Hindi Dubbed'],
+        ['catalog.showSouthHindiDubbed', 'South Indian Blockbusters (Hindi Dubbed)'],
         ['catalog.showHollywoodHindiDubbed', 'Hollywood in Hindi'],
-        ['catalog.showKdramaAsian', 'K-Drama & Asian Hits']
+        ['catalog.showTopSeries', 'Top Series Right Now'],
+        ['catalog.showKdramaAsian', 'K-Drama & Asian Thrillers'],
+        ['catalog.showActionCrime', 'High-Rated Action & Crime']
       ]);
       document.getElementById('pinnedHeroInput').value = (cfg.catalog.pinnedHeroIds || []).join(', ');
       document.getElementById('swCurated').classList.toggle('on', Boolean(cfg.catalog.curatedSection.enabled));
@@ -608,8 +827,10 @@
         ['subtitles.autoLoadBangla', 'Auto-Load Bangla Subtitle by Default']
       ]);
       document.getElementById('geminiModelInput').value = cfg.subtitles.geminiModel || 'gemini-2.5-flash';
+      syncGeminiPreset();
 
       document.getElementById('swAnnounce').classList.toggle('on', Boolean(cfg.announcement.enabled));
+      document.getElementById('swAnnDismiss').classList.toggle('on', cfg.announcement.dismissible !== false);
       document.getElementById('annType').value = cfg.announcement.type || 'info';
       document.getElementById('annTitle').value = cfg.announcement.title || '';
       document.getElementById('annMsg').value = cfg.announcement.message || '';
@@ -619,6 +840,7 @@
       document.getElementById('swUpdate').classList.toggle('on', Boolean(cfg.appUpdate.enabled));
       document.getElementById('updCode').value = cfg.appUpdate.latestVersionCode || 1;
       document.getElementById('updName').value = cfg.appUpdate.latestVersionName || '';
+      document.getElementById('updMinCode').value = cfg.appUpdate.minSupportedVersionCode || 0;
       document.getElementById('updUrl').value = cfg.appUpdate.apkUrl || '';
       document.getElementById('updNotes').value = cfg.appUpdate.changelog || '';
       document.getElementById('swForceUpd').classList.toggle('on', Boolean(cfg.appUpdate.forceUpdate));
@@ -626,11 +848,14 @@
       document.getElementById('swMaint').classList.toggle('on', Boolean(cfg.maintenance.enabled));
       document.getElementById('maintTitle').value = cfg.maintenance.title || '';
       document.getElementById('maintMsg').value = cfg.maintenance.message || '';
+      document.getElementById('maintSupportUrl').value = cfg.maintenance.supportUrl || '';
       renderJsonPreview();
     }
 
     function renderJsonPreview() {
-      document.getElementById('shaLabel').textContent = currentSha ? currentSha.slice(0, 10) : '-';
+      document.getElementById('schemaBadge').textContent = 'v' + (cfg.schemaVersion || 1);
+      document.getElementById('shaLabel').textContent = currentSha ? currentSha.slice(0, 10) : 'new';
+      document.getElementById('updatedAtLabel').textContent = cfg.updatedAt || '-';
       document.getElementById('jsonPreview').textContent = JSON.stringify(cfg, null, 2);
     }
 
@@ -655,9 +880,9 @@
         const body = {
           message: `Publish THIVO config v${cfg.schemaVersion}`,
           content: toBase64Utf8(JSON.stringify(cfg, null, 2)),
-          sha: currentSha,
           branch: auth.branch
         };
+        if (currentSha) body.sha = currentSha;
         const r = await fetch(`https://api.github.com/repos/${auth.owner}/${auth.repo}/contents/config.json`, {
           method: 'PUT',
           headers: {
@@ -669,20 +894,23 @@
         });
         if (!r.ok) {
           const err = await r.json().catch(() => ({}));
+          if (r.status === 409) throw new Error('Conflict — tap Refresh first then Publish again');
           throw new Error(err.message || ('HTTP ' + r.status));
         }
         const res = await r.json();
         currentSha = res.content.sha;
-        renderJsonPreview();
-        toast('Published Live ✓ Active in all apps!');
+        btn.disabled = false;
+        markDirty(false);
+        toast(`Published v${cfg.schemaVersion} Live ✓`);
       } catch (e) {
+        btn.disabled = false;
+        btn.textContent = isDirty ? 'Publish Live •' : 'Publish Live';
         toast('Publish Failed: ' + e.message);
-      } finally {
-        btn.disabled = false; btn.textContent = 'Publish Live';
       }
     }
 
     (function init() {
+      toggleCustJsonField();
       const saved = localStorage.getItem('thivo_admin_auth');
       if (saved) {
         try {
