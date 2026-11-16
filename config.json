@@ -1,10 +1,10 @@
 {
-  "schemaVersion": 7,
-  "updatedAt": "2026-11-16T15:13:25.588Z",
+  "schemaVersion": 8,
+  "updatedAt": "2026-11-16T15:14:07.460Z",
   "builtInProviders": {
     "cineos": true,
-    "stela": true,
-    "vz": true,
+    "stela": false,
+    "vz": false,
     "banglaHindiIndex": true
   },
   "defaultProviderId": "cineos",
