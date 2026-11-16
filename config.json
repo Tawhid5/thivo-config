@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 11,
-  "updatedAt": "2026-11-16T16:05:21.739Z",
+  "schemaVersion": 12,
+  "updatedAt": "2026-11-16T16:05:41.827Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -61,7 +61,7 @@
     "forceUpdate": false
   },
   "maintenance": {
-    "enabled": true,
+    "enabled": false,
     "title": "Scheduled Maintenance",
     "message": "THIVO is upgrading servers. Please check back shortly.",
     "supportUrl": ""
