@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 4,
-  "updatedAt": "2026-11-16T15:03:27.201Z",
+  "schemaVersion": 5,
+  "updatedAt": "2026-11-16T15:04:12.193Z",
   "builtInProviders": {
-    "cineos": false,
-    "stela": false,
-    "vz": false,
-    "banglaHindiIndex": false
+    "cineos": true,
+    "stela": true,
+    "vz": true,
+    "banglaHindiIndex": true
   },
   "defaultProviderId": "cineos",
   "remoteAddons": [],
