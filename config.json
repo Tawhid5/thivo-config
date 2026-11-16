@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 8,
-  "updatedAt": "2026-11-16T15:14:07.460Z",
+  "schemaVersion": 9,
+  "updatedAt": "2026-11-16T15:40:19.735Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -47,7 +47,7 @@
     "enabled": true,
     "type": "promo",
     "title": "What about you",
-    "message": "Hello world",
+    "message": "Hello world ",
     "actionLabel": "ok",
     "actionUrl": "https://www.youtube.com/",
     "dismissible": true
