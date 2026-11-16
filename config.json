@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 5,
-  "updatedAt": "2026-11-16T15:04:12.193Z",
+  "schemaVersion": 6,
+  "updatedAt": "2026-11-16T15:11:33.165Z",
   "builtInProviders": {
-    "cineos": true,
-    "stela": true,
+    "cineos": false,
+    "stela": false,
     "vz": true,
     "banglaHindiIndex": true
   },
