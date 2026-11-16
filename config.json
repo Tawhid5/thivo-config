@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "updatedAt": "2026-11-16T00:00:00Z",
+  "schemaVersion": 2,
+  "updatedAt": "2026-11-16T15:01:45.810Z",
   "builtInProviders": {
     "cineos": true,
     "stela": true,
@@ -46,10 +46,10 @@
   "announcement": {
     "enabled": false,
     "type": "info",
-    "title": "",
-    "message": "",
-    "actionLabel": "",
-    "actionUrl": "",
+    "title": "What about you",
+    "message": "Hello world",
+    "actionLabel": "ok",
+    "actionUrl": "https://www.youtube.com/",
     "dismissible": true
   },
   "appUpdate": {
