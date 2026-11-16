@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 15,
-  "updatedAt": "2026-11-16T16:06:20.571Z",
+  "schemaVersion": 16,
+  "updatedAt": "2026-11-16T16:06:35.402Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
