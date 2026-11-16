@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-16T00:00:00Z",
+  "builtInProviders": {
+    "cineos": true,
+    "stela": true,
+    "vz": true,
+    "banglaHindiIndex": true
+  },
+  "defaultProviderId": "cineos",
+  "remoteAddons": [],
+  "remoteCustomProviders": [],
+  "playback": {
+    "preferredDefaultQuality": "1080p",
+    "preferH264OverHevc": true
+  },
+  "catalog": {
+    "region": "IN",
+    "showHeroCarousel": true,
+    "showContinueWatching": true,
+    "showTrendingNow": true,
+    "showLatestBollywood": true,
+    "showHindiWebSeries": true,
+    "showSouthHindiDubbed": true,
+    "showHollywoodHindiDubbed": true,
+    "showKdramaAsian": true,
+    "pinnedHeroIds": [],
+    "curatedSection": {
+      "enabled": false,
+      "title": "Editor's Picks",
+      "subtitle": "Handpicked for you",
+      "items": []
+    }
+  },
+  "subtitles": {
+    "openSubtitlesV3": true,
+    "openSubtitlesRest": true,
+    "subtitleCat": true,
+    "yify": true,
+    "subdl": true,
+    "subsource": true,
+    "inStream": true,
+    "autoLoadBangla": true,
+    "geminiModel": "gemini-2.5-flash"
+  },
+  "announcement": {
+    "enabled": false,
+    "type": "info",
+    "title": "",
+    "message": "",
+    "actionLabel": "",
+    "actionUrl": "",
+    "dismissible": true
+  },
+  "appUpdate": {
+    "enabled": false,
+    "latestVersionCode": 1,
+    "latestVersionName": "1.0",
+    "apkUrl": "",
+    "changelog": "",
+    "forceUpdate": false
+  },
+  "maintenance": {
+    "enabled": false,
+    "title": "Scheduled Maintenance",
+    "message": "THIVO is upgrading servers. Please check back shortly.",
+    "supportUrl": ""
+  }
+}
