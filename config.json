@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 18,
-  "updatedAt": "2026-11-16T17:34:38.290Z",
+  "schemaVersion": 19,
+  "updatedAt": "2026-11-16T17:35:12.828Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -52,7 +52,7 @@
     "enabled": true,
     "type": "warning",
     "title": "What about",
-    "message": "Hello ",
+    "message": "Hello \n\n\n\n\n\n\nকি খবর",
     "actionLabel": "ok",
     "actionUrl": "https://www.youtube.com/",
     "dismissible": true
