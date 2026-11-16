@@ -1,0 +1,2 @@
+# thivo-config
+admin
