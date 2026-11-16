@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 2,
-  "updatedAt": "2026-11-16T15:01:45.810Z",
+  "schemaVersion": 3,
+  "updatedAt": "2026-11-16T15:02:14.241Z",
   "builtInProviders": {
     "cineos": true,
     "stela": true,
@@ -44,7 +44,7 @@
     "geminiModel": "gemini-2.5-flash"
   },
   "announcement": {
-    "enabled": false,
+    "enabled": true,
     "type": "info",
     "title": "What about you",
     "message": "Hello world",
