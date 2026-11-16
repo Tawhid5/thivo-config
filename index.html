@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>THIVO Command Center</title>
+  <style>
+    :root {
+      --bg: #070a12;
+      --surface: rgba(17, 23, 38, 0.78);
+      --surface-solid: #111726;
+      --border: rgba(255, 255, 255, 0.1);
+      --amber: #f59e0b;
+      --amber-soft: rgba(245, 158, 11, 0.16);
+      --green: #10b981;
+      --red: #ef4444;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 45%);
+      color: var(--text); min-height: 100vh; padding-bottom: 84px;
+    }
+    .topbar {
+      position: sticky; top: 0; z-index: 40;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 12px 16px; background: rgba(7, 10, 18, 0.82);
+      backdrop-filter: blur(18px); border-bottom: 1px solid var(--border);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; letter-spacing: 0.4px; }
+    .brand-dot {
+      width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, #f59e0b, #d97706);
+      display: grid; place-items: center; color: #000; font-weight: 900; font-size: 14px;
+    }
+    .badge { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: var(--amber-soft); color: var(--amber); font-weight: 700; }
+    .container { max-width: 780px; margin: 0 auto; padding: 14px; }
+    .card {
+      background: var(--surface); backdrop-filter: blur(16px);
+      border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px;
+    }
+    .card-title { font-size: 15px; font-weight: 700; margin: 0 0 4px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .card-sub { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
+    label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 5px; font-weight: 600; }
+    input, select, textarea {
+      width: 100%; background: rgba(7, 10, 18, 0.72); color: var(--text);
+      border: 1px solid var(--border); border-radius: 12px; padding: 11px 12px;
+      font-size: 14px; outline: none; font-family: inherit;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--amber); }
+    textarea { min-height: 76px; resize: vertical; }
+    .row { display: flex; gap: 8px; align-items: center; }
+    .row > * { flex: 1; }
+    .btn {
+      border: 0; border-radius: 12px; padding: 10px 14px; font-size: 13px; font-weight: 700;
+      cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: linear-gradient(135deg, #f59e0b, #d97706); color: #0b0f1a; }
+    .btn-glass { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--border); }
+    .btn-danger { background: rgba(239,68,68,0.16); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+    .btn-sm { padding: 7px 10px; font-size: 12px; border-radius: 9px; }
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .toggle-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .toggle-title { font-size: 14px; font-weight: 600; }
+    .toggle-desc { font-size: 11px; color: var(--muted); }
+    .switch {
+      position: relative; width: 46px; height: 26px; flex-shrink: 0;
+      background: rgba(255,255,255,0.15); border-radius: 999px; cursor: pointer; transition: .2s;
+    }
+    .switch.on { background: var(--amber); }
+    .switch::after {
+      content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px;
+      border-radius: 50%; background: #fff; transition: .2s;
+    }
+    .switch.on::after { transform: translateX(20px); background: #070a12; }
+    .addon-item {
+      background: rgba(7,10,18,0.62); border: 1px solid var(--border);
+      border-radius: 14px; padding: 12px; margin-bottom: 10px;
+    }
+    .addon-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .addon-url { font-size: 11px; color: var(--muted); word-break: break-all; margin: 4px 0 8px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .bottom-nav {
+      position: fixed; bottom: 10px; left: 10px; right: 10px; z-index: 40;
+      max-width: 760px; margin: 0 auto;
+      display: flex; background: rgba(11, 15, 26, 0.9); backdrop-filter: blur(20px);
+      border: 1px solid var(--border); border-radius: 20px; padding: 5px;
+    }
+    .nav-btn {
+      flex: 1; background: transparent; border: 0; color: var(--muted);
+      padding: 8px 4px; border-radius: 14px; font-size: 11px; font-weight: 700; cursor: pointer;
+    }
+    .nav-btn.active { background: var(--amber-soft); color: var(--amber); }
+    .toast {
+      position: fixed; top: 66px; left: 50%; transform: translateX(-50%); z-index: 90;
+      padding: 10px 16px; border-radius: 999px; font-size: 13px; font-weight: 700;
+      background: #0f172a; border: 1px solid var(--amber); color: #fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none;
+    }
+    .hidden { display: none !important; }
+    .pill { font-size: 10px; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--muted); }
+    .pill.star { background: var(--amber-soft); color: var(--amber); }
+    pre {
+      background: #04060c; padding: 12px; border-radius: 12px; overflow: auto;
+      font-size: 11px; color: #cbd5e1; max-height: 340px; border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-dot">T</div>
+      <div>
+        <div>THIVO <span class="badge">ADMIN</span></div>
+      </div>
+    </div>
+    <div id="topActions" class="row hidden" style="flex:0 0 auto;">
+      <button class="btn btn-glass btn-sm" onclick="loadConfig()">Refresh</button>
+      <button class="btn btn-primary btn-sm" id="publishBtn" onclick="publishConfig()">Publish Live</button>
+      <button class="btn btn-danger btn-sm" onclick="logout()">Exit</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- LOGIN VIEW -->
+    <section id="loginView" class="card" style="margin-top:24px;">
+      <h2 class="card-title">Unlock THIVO Command Center</h2>
+      <p class="card-sub">Your GitHub token is stored locally on your device only. Changes publish live without updating the APK.</p>
+      <label>GitHub Username</label>
+      <input id="ghOwner" value="Tawhid5" />
+      <label>Config Repository</label>
+      <input id="ghRepo" value="thivo-config" />
+      <label>Branch</label>
+      <input id="ghBranch" value="main" />
+      <label>Fine-Grained Personal Access Token (github_pat_...)</label>
+      <input id="ghToken" type="password" placeholder="Paste your token here" />
+      <div style="margin-top:16px;">
+        <button class="btn btn-primary" style="width:100%;" onclick="connectGitHub()">Connect & Load Live Config</button>
+      </div>
+    </section>
+
+    <!-- DASHBOARD VIEW -->
+    <section id="dashView" class="hidden">
+      <!-- TAB 1: SOURCES -->
+      <div id="tab-sources" class="tab-pane">
+        <div class="card">
+          <div class="card-title">Add Stremio Addon (PlavioHD / CNCVerse / Any)</div>
+          <p class="card-sub">Paste manifest.json or stremio:// URL. Test before publishing live.</p>
+          <label>Addon Manifest URL</label>
+          <div class="row">
+            <input id="newAddonUrl" placeholder="https://.../manifest.json or stremio://..." />
+            <button class="btn btn-glass btn-sm" style="flex:0 0 auto;" onclick="testAddonUrl()">Test</button>
+          </div>
+          <div id="addonTestMsg" style="font-size:12px;margin-top:6px;color:var(--amber);"></div>
+          <div class="row">
+            <div>
+              <label>Display Name</label>
+              <input id="newAddonName" placeholder="e.g. PlavioHD / CNCVerse" />
+            </div>
+            <div>
+              <label>Badge</label>
+              <input id="newAddonBadge" placeholder="e.g. Hindi / 4K" />
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <button class="btn btn-primary" style="width:100%;" onclick="addAddon()">+ Add to Remote List</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Remote Addons (<span id="addonCount">0</span>)</div>
+          <p class="card-sub">Order sets stream priority. Tap ★ to set admin-recommended default.</p>
+          <div id="addonsList"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Built-In Stream Engines & Playback</div>
+          <p class="card-sub">Toggle built-in app extractors remotely if any server breaks.</p>
+          <div id="builtInToggles"></div>
+          <label>Default Recommended Provider ID</label>
+          <select id="defaultProviderSelect" onchange="cfg.defaultProviderId = this.value"></select>
+          <label>Default Preferred Stream Quality</label>
+          <select id="prefQuality" onchange="cfg.playback.preferredDefaultQuality = this.value">
+            <option value="1080p">1080p Full HD (Recommended)</option>
+            <option value="720p">720p Data Saver</option>
+            <option value="Auto">Auto</option>
+          </select>
+          <div class="toggle-row" style="margin-top:8px;">
+            <div>
+              <div class="toggle-title">Prefer H.264 / MP4 over 10-bit HEVC</div>
+              <div class="toggle-desc">Prevents buffering & audio issues on mid-range phones</div>
+            </div>
+            <div id="swH264" class="switch" onclick="toggleBool('playback.preferH264OverHevc', this)"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Custom Direct / JSON Endpoints</div>
+          <p class="card-sub">Push custom scraper templates ({tmdb}, {imdb}, {season}, {episode}).</p>
+          <div class="row">
+            <input id="custName" placeholder="Provider Name" />
+            <input id="custUrl" placeholder="https://api.site/watch/{tmdb}" />
+          </div>
+          <button class="btn btn-glass btn-sm" style="margin-top:8px;width:100%;" onclick="addCustomProvider()">+ Add Custom Endpoint</button>
+          <div id="customList" style="margin-top:10px;"></div>
+        </div>
+      </div>
+
+      <!-- TAB 2: CATALOG -->
+      <div id="tab-catalog" class="tab-pane hidden">
+        <div class="card">
+          <div class="card-title">Home Screen Rails Visibility</div>
+          <p class="card-sub">Turn individual Home sections ON or OFF live.</p>
+          <div id="catalogToggles"></div>
+          <label>Pinned Hero TMDB IDs (comma separated, e.g. movie:550, tv:1399)</label>
+          <input id="pinnedHeroInput" placeholder="movie:550, tv:1399" onchange="updatePinnedHero()" />
+        </div>
+
+        <div class="card">
+          <div class="card-title">Special Curated Collection (Push Featured List)</div>
+          <p class="card-sub">Create a temporary Eid / Weekend / Top Picks row on everyone's Home screen.</p>
+          <div class="toggle-row">
+            <div><div class="toggle-title">Enable Curated Row</div></div>
+            <div id="swCurated" class="switch" onclick="toggleBool('catalog.curatedSection.enabled', this)"></div>
+          </div>
+          <label>Row Title</label>
+          <input id="curatedTitle" oninput="cfg.catalog.curatedSection.title = this.value" />
+          <label>Subtitle</label>
+          <input id="curatedSub" oninput="cfg.catalog.curatedSection.subtitle = this.value" />
+          <label>TMDB Items (e.g. movie:550, tv:94605)</label>
+          <input id="curatedItems" placeholder="movie:550, tv:94605" onchange="updateCuratedItems()" />
+        </div>
+      </div>
+
+      <!-- TAB 3: SUBTITLES & AI -->
+      <div id="tab-subs" class="tab-pane hidden">
+        <div class="card">
+          <div class="card-title">Online Subtitle Scrapers Control</div>
+          <p class="card-sub">Disable any broken subtitle source immediately without an app update.</p>
+          <div id="subToggles"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">AI Translation Engine</div>
+          <p class="card-sub">Update Gemini model alias remotely if Google releases newer models.</p>
+          <label>Active Gemini Model Alias</label>
+          <input id="geminiModelInput" oninput="cfg.subtitles.geminiModel = this.value.trim()" />
+        </div>
+      </div>
+
+      <!-- TAB 4: NOTICES & OTA -->
+      <div id="tab-notices" class="tab-pane hidden">
+        <div class="card">
+          <div class="card-title">Home Announcement Banner</div>
+          <p class="card-sub">Send live news, Telegram link, or stream tips to all THIVO users.</p>
+          <div class="toggle-row">
+            <div><div class="toggle-title">Show Announcement</div></div>
+            <div id="swAnnounce" class="switch" onclick="toggleBool('announcement.enabled', this)"></div>
+          </div>
+          <label>Banner Type</label>
+          <select id="annType" onchange="cfg.announcement.type = this.value">
+            <option value="info">Info (Blue/Glass)</option>
+            <option value="promo">Highlight (Amber Gold)</option>
+            <option value="warning">Alert (Red)</option>
+          </select>
+          <label>Title (Bangla / English)</label>
+          <input id="annTitle" oninput="cfg.announcement.title = this.value" />
+          <label>Message</label>
+          <textarea id="annMsg" oninput="cfg.announcement.message = this.value"></textarea>
+          <div class="row">
+            <div><label>Button Label (optional)</label><input id="annBtnLabel" oninput="cfg.announcement.actionLabel = this.value" /></div>
+            <div><label>Action URL (optional)</label><input id="annBtnUrl" oninput="cfg.announcement.actionUrl = this.value" /></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">In-App APK Update Popup (OTA)</div>
+          <p class="card-sub">Notify users when you build a new APK on GitHub Releases.</p>
+          <div class="toggle-row">
+            <div><div class="toggle-title">Enable Update Prompt</div></div>
+            <div id="swUpdate" class="switch" onclick="toggleBool('appUpdate.enabled', this)"></div>
+          </div>
+          <div class="row">
+            <div><label>Latest Version Code (Int)</label><input id="updCode" type="number" oninput="cfg.appUpdate.latestVersionCode = Number(this.value||1)" /></div>
+            <div><label>Version Name (e.g. 1.2)</label><input id="updName" oninput="cfg.appUpdate.latestVersionName = this.value" /></div>
+          </div>
+          <label>Direct APK Download URL</label>
+          <input id="updUrl" placeholder="https://github.com/Tawhid5/Thivo/releases/..." oninput="cfg.appUpdate.apkUrl = this.value" />
+          <label>What's New / Changelog</label>
+          <textarea id="updNotes" oninput="cfg.appUpdate.changelog = this.value"></textarea>
+          <div class="toggle-row">
+            <div><div class="toggle-title">Force Update (Block older APK)</div></div>
+            <div id="swForceUpd" class="switch" onclick="toggleBool('appUpdate.forceUpdate', this)"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Maintenance Lock (Emergency Mode)</div>
+          <div class="toggle-row">
+            <div><div class="toggle-title">Enable Maintenance Screen</div></div>
+            <div id="swMaint" class="switch" onclick="toggleBool('maintenance.enabled', this)"></div>
+          </div>
+          <label>Title</label><input id="maintTitle" oninput="cfg.maintenance.title = this.value" />
+          <label>Message</label><textarea id="maintMsg" oninput="cfg.maintenance.message = this.value"></textarea>
+        </div>
+      </div>
+
+      <!-- TAB 5: JSON -->
+      <div id="tab-json" class="tab-pane hidden">
+        <div class="card">
+          <div class="card-title">Live config.json Preview</div>
+          <p class="card-sub">Last synced SHA: <span id="shaLabel">-</span></p>
+          <div class="row" style="margin-bottom:10px;">
+            <button class="btn btn-glass btn-sm" onclick="copyJson()">Copy JSON</button>
+            <button class="btn btn-glass btn-sm" onclick="downloadJson()">Download Backup</button>
+          </div>
+          <pre id="jsonPreview"></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav id="bottomNav" class="bottom-nav hidden">
+    <button class="nav-btn active" onclick="switchTab('sources', this)">Sources</button>
+    <button class="nav-btn" onclick="switchTab('catalog', this)">Catalog</button>
+    <button class="nav-btn" onclick="switchTab('subs', this)">Subtitles</button>
+    <button class="nav-btn" onclick="switchTab('notices', this)">Notices</button>
+    <button class="nav-btn" onclick="switchTab('json', this)">JSON</button>
+  </nav>
+
+  <script>
+    let auth = { owner: 'Tawhid5', repo: 'thivo-config', branch: 'main', token: '' };
+    let currentSha = '';
+    let cfg = {};
+
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    function toBase64Utf8(str) {
+      const bytes = new TextEncoder().encode(str);
+      let bin = '';
+      for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+      return btoa(bin);
+    }
+    function fromBase64Utf8(b64) {
+      const bin = atob(b64.replace(/\s/g, ''));
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    }
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg; el.style.display = 'block';
+      clearTimeout(window._t); window._t = setTimeout(() => el.style.display = 'none', 2800);
+    }
+    function getPath(path) { return path.split('.').reduce((o, k) => o?.[k], cfg); }
+    function setPath(path, val) {
+      const parts = path.split('.');
+      let o = cfg;
+      for (let i = 0; i < parts.length - 1; i++) { o[parts[i]] = o[parts[i]] || {}; o = o[parts[i]]; }
+      o[parts[parts.length - 1]] = val;
+    }
+    function toggleBool(path, el) {
+      const next = !Boolean(getPath(path));
+      setPath(path, next);
+      el.classList.toggle('on', next);
+      renderJsonPreview();
+    }
+    function switchTab(id, btn) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+      document.getElementById('tab-' + id).classList.remove('hidden');
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (id === 'json') renderJsonPreview();
+    }
+
+    async function connectGitHub() {
+      auth.owner = document.getElementById('ghOwner').value.trim();
+      auth.repo = document.getElementById('ghRepo').value.trim();
+      auth.branch = document.getElementById('ghBranch').value.trim() || 'main';
+      auth.token = document.getElementById('ghToken').value.trim();
+      if (!auth.token) return toast('Please paste your GitHub token');
+      localStorage.setItem('thivo_admin_auth', JSON.stringify(auth));
+      await loadConfig();
+    }
+
+    function logout() {
+      localStorage.removeItem('thivo_admin_auth');
+      location.reload();
+    }
+
+    async function loadConfig() {
+      try {
+        toast('Loading live config...');
+        const url = `https://api.github.com/repos/${auth.owner}/${auth.repo}/contents/config.json?ref=${auth.branch}&_=${Date.now()}`;
+        const r = await fetch(url, { headers: { Authorization: `Bearer ${auth.token}`, Accept: 'application/vnd.github+json' } });
+        if (!r.ok) throw new Error('HTTP ' + r.status + ' — Check token & repo permissions');
+        const data = await r.json();
+        currentSha = data.sha;
+        cfg = JSON.parse(fromBase64Utf8(data.content));
+        ensureDefaults();
+        document.getElementById('loginView').classList.add('hidden');
+        document.getElementById('dashView').classList.remove('hidden');
+        document.getElementById('topActions').classList.remove('hidden');
+        document.getElementById('bottomNav').classList.remove('hidden');
+        renderAll();
+        toast('Live config loaded ✓');
+      } catch (e) {
+        toast('Error: ' + e.message);
+      }
+    }
+
+    function ensureDefaults() {
+      cfg.builtInProviders = cfg.builtInProviders || { cineos: true, stela: true, vz: true, banglaHindiIndex: true };
+      cfg.remoteAddons = cfg.remoteAddons || [];
+      cfg.remoteCustomProviders = cfg.remoteCustomProviders || [];
+      cfg.playback = cfg.playback || { preferredDefaultQuality: '1080p', preferH264OverHevc: true };
+      cfg.catalog = cfg.catalog || { curatedSection: { enabled: false, title: "Editor's Picks", subtitle: "", items: [] } };
+      cfg.catalog.curatedSection = cfg.catalog.curatedSection || { enabled: false, title: "Editor's Picks", subtitle: "", items: [] };
+      cfg.subtitles = cfg.subtitles || { openSubtitlesV3: true, openSubtitlesRest: true, subtitleCat: true, yify: true, subdl: true, subsource: true, inStream: true, autoLoadBangla: true, geminiModel: 'gemini-2.5-flash' };
+      cfg.announcement = cfg.announcement || { enabled: false, type: 'info', title: '', message: '', actionLabel: '', actionUrl: '', dismissible: true };
+      cfg.appUpdate = cfg.appUpdate || { enabled: false, latestVersionCode: 1, latestVersionName: '1.0', apkUrl: '', changelog: '', forceUpdate: false };
+      cfg.maintenance = cfg.maintenance || { enabled: false, title: '', message: '', supportUrl: '' };
+    }
+
+    function normalizeManifestUrl(raw) {
+      let u = raw.trim().replace(/^stremio:\/\//i, 'https://');
+      if (u && !u.endsWith('/manifest.json') && !u.includes('manifest.json')) {
+        u = u.replace(/\/+$/, '') + '/manifest.json';
+      }
+      return u;
+    }
+
+    async function testAddonUrl() {
+      const msgEl = document.getElementById('addonTestMsg');
+      const url = normalizeManifestUrl(document.getElementById('newAddonUrl').value);
+      if (!url) return;
+      document.getElementById('newAddonUrl').value = url;
+      msgEl.textContent = 'Testing manifest...';
+      try {
+        const r = await fetch(url);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const m = await r.json();
+        if (!m.name && !m.id) throw new Error('Invalid Stremio manifest JSON');
+        if (!document.getElementById('newAddonName').value.trim()) {
+          document.getElementById('newAddonName').value = m.name || m.id;
+        }
+        msgEl.textContent = `✓ Online: ${m.name || m.id} (${(m.types || []).join(', ')})`;
+      } catch (e) {
+        msgEl.textContent = `⚠ Browser check note: ${e.message} (may still work in Android if CORS blocked)`;
+      }
+    }
+
+    function addAddon() {
+      const url = normalizeManifestUrl(document.getElementById('newAddonUrl').value);
+      const name = document.getElementById('newAddonName').value.trim();
+      const badge = document.getElementById('newAddonBadge').value.trim();
+      if (!url || !name) return toast('Enter both Manifest URL and Name');
+      cfg.remoteAddons.push({
+        id: 'addon_' + Date.now(),
+        name, manifestUrl: url, enabled: true,
+        priority: cfg.remoteAddons.length + 1, badge: badge || 'Official'
+      });
+      document.getElementById('newAddonUrl').value = '';
+      document.getElementById('newAddonName').value = '';
+      document.getElementById('newAddonBadge').value = '';
+      document.getElementById('addonTestMsg').textContent = '';
+      renderAddons(); renderDefaultProviderSelect();
+      toast('Addon added (tap Publish Live to save)');
+    }
+
+    function moveAddon(idx, dir) {
+      const target = idx + dir;
+      if (target < 0 || target >= cfg.remoteAddons.length) return;
+      const tmp = cfg.remoteAddons[idx];
+      cfg.remoteAddons[idx] = cfg.remoteAddons[target];
+      cfg.remoteAddons[target] = tmp;
+      cfg.remoteAddons.forEach((a, i) => a.priority = i + 1);
+      renderAddons();
+    }
+
+    function addCustomProvider() {
+      const name = document.getElementById('custName').value.trim();
+      const url = document.getElementById('custUrl').value.trim();
+      if (!name || !url) return toast('Enter Name and Endpoint URL');
+      cfg.remoteCustomProviders.push({ id: 'cust_' + Date.now(), name, endpointTemplate: url, enabled: true });
+      document.getElementById('custName').value = '';
+      document.getElementById('custUrl').value = '';
+      renderCustomProviders(); renderDefaultProviderSelect();
+    }
+
+    function renderToggleList(containerId, items) {
+      document.getElementById(containerId).innerHTML = items.map(([path, title, desc]) => `
+        <div class="toggle-row">
+          <div><div class="toggle-title">${esc(title)}</div>${desc ? `<div class="toggle-desc">${esc(desc)}</div>` : ''}</div>
+          <div class="switch ${getPath(path) ? 'on' : ''}" onclick="toggleBool('${path}', this)"></div>
+        </div>
+      `).join('');
+    }
+
+    function renderAddons() {
+      document.getElementById('addonCount').textContent = cfg.remoteAddons.length;
+      const list = document.getElementById('addonsList');
+      if (!cfg.remoteAddons.length) {
+        list.innerHTML = '<div style="color:var(--muted);font-size:13px;">No remote addons added yet.</div>';
+        return;
+      }
+      list.innerHTML = cfg.remoteAddons.map((a, i) => `
+        <div class="addon-item">
+          <div class="addon-head">
+            <div>
+              <strong>${esc(a.name)}</strong>
+              ${a.badge ? `<span class="pill">${esc(a.badge)}</span>` : ''}
+              ${cfg.defaultProviderId === a.id ? `<span class="pill star">★ Default</span>` : ''}
+            </div>
+            <div class="switch ${a.enabled ? 'on' : ''}" onclick="cfg.remoteAddons[${i}].enabled=!cfg.remoteAddons[${i}].enabled; renderAddons()"></div>
+          </div>
+          <div class="addon-url">${esc(a.manifestUrl)}</div>
+          <div class="actions">
+            <button class="btn btn-glass btn-sm" onclick="moveAddon(${i},-1)">▲</button>
+            <button class="btn btn-glass btn-sm" onclick="moveAddon(${i},1)">▼</button>
+            <button class="btn btn-glass btn-sm" onclick="cfg.defaultProviderId='${esc(a.id)}'; renderAddons(); renderDefaultProviderSelect()">★ Pin Default</button>
+            <button class="btn btn-danger btn-sm" onclick="cfg.remoteAddons.splice(${i},1); renderAddons(); renderDefaultProviderSelect()">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderCustomProviders() {
+      const el = document.getElementById('customList');
+      el.innerHTML = cfg.remoteCustomProviders.map((c, i) => `
+        <div class="addon-item">
+          <div class="addon-head">
+            <strong>${esc(c.name)}</strong>
+            <div class="row" style="flex:0 0 auto;">
+              <div class="switch ${c.enabled ? 'on' : ''}" onclick="cfg.remoteCustomProviders[${i}].enabled=!cfg.remoteCustomProviders[${i}].enabled; renderCustomProviders()"></div>
+              <button class="btn btn-danger btn-sm" onclick="cfg.remoteCustomProviders.splice(${i},1); renderCustomProviders()">X</button>
+            </div>
+          </div>
+          <div class="addon-url">${esc(c.endpointTemplate)}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderDefaultProviderSelect() {
+      const opts = [
+        ['cineos', 'CineOS (Built-in)'],
+        ['stela', 'Stela (Built-in)'],
+        ['vz', 'VZ Direct (Built-in)'],
+        ['banglaHindiIndex', 'Index RSS (Built-in)'],
+        ...cfg.remoteAddons.map(a => [a.id, 'Addon: ' + a.name]),
+        ...cfg.remoteCustomProviders.map(c => [c.id, 'Custom: ' + c.name])
+      ];
+      document.getElementById('defaultProviderSelect').innerHTML = opts.map(([v, l]) =>
+        `<option value="${esc(v)}" ${cfg.defaultProviderId === v ? 'selected' : ''}>${esc(l)}</option>`
+      ).join('');
+    }
+
+    function updatePinnedHero() {
+      cfg.catalog.pinnedHeroIds = document.getElementById('pinnedHeroInput').value.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    function updateCuratedItems() {
+      cfg.catalog.curatedSection.items = document.getElementById('curatedItems').value.split(',').map(s => s.trim()).filter(Boolean);
+    }
+
+    function renderAll() {
+      renderAddons();
+      renderCustomProviders();
+      renderDefaultProviderSelect();
+      renderToggleList('builtInToggles', [
+        ['builtInProviders.cineos', 'CineOS Engine', 'Multi-audio direct MP4/HLS'],
+        ['builtInProviders.stela', 'Stela Resolver', 'Fast direct stream fallback'],
+        ['builtInProviders.vz', 'VZ Resolver', 'Secondary direct stream'],
+        ['builtInProviders.banglaHindiIndex', 'Index RSS Engine', 'Bangla & Hindi mirror links']
+      ]);
+      document.getElementById('prefQuality').value = cfg.playback.preferredDefaultQuality || '1080p';
+      document.getElementById('swH264').classList.toggle('on', Boolean(cfg.playback.preferH264OverHevc));
+
+      renderToggleList('catalogToggles', [
+        ['catalog.showHeroCarousel', 'Hero Backdrop Carousel'],
+        ['catalog.showContinueWatching', 'Continue Watching'],
+        ['catalog.showTrendingNow', 'Trending Now'],
+        ['catalog.showLatestBollywood', 'Latest Bollywood & Hindi Hits'],
+        ['catalog.showHindiWebSeries', 'Hindi Web Series'],
+        ['catalog.showSouthHindiDubbed', 'South Indian Hindi Dubbed'],
+        ['catalog.showHollywoodHindiDubbed', 'Hollywood in Hindi'],
+        ['catalog.showKdramaAsian', 'K-Drama & Asian Hits']
+      ]);
+      document.getElementById('pinnedHeroInput').value = (cfg.catalog.pinnedHeroIds || []).join(', ');
+      document.getElementById('swCurated').classList.toggle('on', Boolean(cfg.catalog.curatedSection.enabled));
+      document.getElementById('curatedTitle').value = cfg.catalog.curatedSection.title || '';
+      document.getElementById('curatedSub').value = cfg.catalog.curatedSection.subtitle || '';
+      document.getElementById('curatedItems').value = (cfg.catalog.curatedSection.items || []).join(', ');
+
+      renderToggleList('subToggles', [
+        ['subtitles.openSubtitlesV3', 'OpenSubtitles v3'],
+        ['subtitles.openSubtitlesRest', 'OpenSubtitles REST'],
+        ['subtitles.subtitleCat', 'SubtitleCat'],
+        ['subtitles.yify', 'YIFY Subtitles'],
+        ['subtitles.subdl', 'SubDL'],
+        ['subtitles.subsource', 'SubSource'],
+        ['subtitles.inStream', 'In-Stream Captions'],
+        ['subtitles.autoLoadBangla', 'Auto-Load Bangla Subtitle by Default']
+      ]);
+      document.getElementById('geminiModelInput').value = cfg.subtitles.geminiModel || 'gemini-2.5-flash';
+
+      document.getElementById('swAnnounce').classList.toggle('on', Boolean(cfg.announcement.enabled));
+      document.getElementById('annType').value = cfg.announcement.type || 'info';
+      document.getElementById('annTitle').value = cfg.announcement.title || '';
+      document.getElementById('annMsg').value = cfg.announcement.message || '';
+      document.getElementById('annBtnLabel').value = cfg.announcement.actionLabel || '';
+      document.getElementById('annBtnUrl').value = cfg.announcement.actionUrl || '';
+
+      document.getElementById('swUpdate').classList.toggle('on', Boolean(cfg.appUpdate.enabled));
+      document.getElementById('updCode').value = cfg.appUpdate.latestVersionCode || 1;
+      document.getElementById('updName').value = cfg.appUpdate.latestVersionName || '';
+      document.getElementById('updUrl').value = cfg.appUpdate.apkUrl || '';
+      document.getElementById('updNotes').value = cfg.appUpdate.changelog || '';
+      document.getElementById('swForceUpd').classList.toggle('on', Boolean(cfg.appUpdate.forceUpdate));
+
+      document.getElementById('swMaint').classList.toggle('on', Boolean(cfg.maintenance.enabled));
+      document.getElementById('maintTitle').value = cfg.maintenance.title || '';
+      document.getElementById('maintMsg').value = cfg.maintenance.message || '';
+      renderJsonPreview();
+    }
+
+    function renderJsonPreview() {
+      document.getElementById('shaLabel').textContent = currentSha ? currentSha.slice(0, 10) : '-';
+      document.getElementById('jsonPreview').textContent = JSON.stringify(cfg, null, 2);
+    }
+
+    function copyJson() {
+      navigator.clipboard.writeText(JSON.stringify(cfg, null, 2));
+      toast('JSON copied ✓');
+    }
+
+    function downloadJson() {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' }));
+      a.download = 'thivo-config-backup.json';
+      a.click();
+    }
+
+    async function publishConfig() {
+      const btn = document.getElementById('publishBtn');
+      btn.disabled = true; btn.textContent = 'Publishing...';
+      try {
+        cfg.updatedAt = new Date().toISOString();
+        cfg.schemaVersion = (cfg.schemaVersion || 0) + 1;
+        const body = {
+          message: `Publish THIVO config v${cfg.schemaVersion}`,
+          content: toBase64Utf8(JSON.stringify(cfg, null, 2)),
+          sha: currentSha,
+          branch: auth.branch
+        };
+        const r = await fetch(`https://api.github.com/repos/${auth.owner}/${auth.repo}/contents/config.json`, {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+            Accept: 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+        if (!r.ok) {
+          const err = await r.json().catch(() => ({}));
+          throw new Error(err.message || ('HTTP ' + r.status));
+        }
+        const res = await r.json();
+        currentSha = res.content.sha;
+        renderJsonPreview();
+        toast('Published Live ✓ Active in all apps!');
+      } catch (e) {
+        toast('Publish Failed: ' + e.message);
+      } finally {
+        btn.disabled = false; btn.textContent = 'Publish Live';
+      }
+    }
+
+    (function init() {
+      const saved = localStorage.getItem('thivo_admin_auth');
+      if (saved) {
+        try {
+          auth = JSON.parse(saved);
+          document.getElementById('ghOwner').value = auth.owner;
+          document.getElementById('ghRepo').value = auth.repo;
+          document.getElementById('ghBranch').value = auth.branch;
+          document.getElementById('ghToken').value = auth.token;
+          if (auth.token) loadConfig();
+        } catch {}
+      }
+    })();
+  </script>
+</body>
+</html>
