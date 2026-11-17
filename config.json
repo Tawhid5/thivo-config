@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 19,
-  "updatedAt": "2026-11-16T17:35:12.828Z",
+  "schemaVersion": 20,
+  "updatedAt": "2026-11-17T08:24:00.373Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -49,7 +49,7 @@
     "geminiModel": "gemini-2.5-flash"
   },
   "announcement": {
-    "enabled": true,
+    "enabled": false,
     "type": "warning",
     "title": "What about",
     "message": "Hello \n\n\n\n\n\n\nকি খবর",
