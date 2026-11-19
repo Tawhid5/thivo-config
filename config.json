@@ -1,6 +1,6 @@
 {
   "schemaVersion": 20,
-  "updatedAt": "2026-11-17T08:24:00.373Z",
+  "updatedAt": "2026-11-19T06:05:55.487Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -71,5 +71,147 @@
     "title": "Scheduled Maintenanc",
     "message": "THIVO is upgrading servers. Please check back shortly.",
     "supportUrl": ""
+  },
+  "directSites": [
+    {
+      "id": "rogmovies",
+      "name": "RogMovies",
+      "baseUrl": "https://rogmovies.cyou/",
+      "enabled": true,
+      "priority": 1,
+      "tag": "Dual Audio / Hindi"
+    },
+    {
+      "id": "vegamovies",
+      "name": "VegaMovies",
+      "baseUrl": "https://vegamovies.lease/",
+      "enabled": true,
+      "priority": 2,
+      "tag": "4K / 1080p / Dual"
+    },
+    {
+      "id": "hdhub4u",
+      "name": "HDHub4u",
+      "baseUrl": "https://new15.hdhub4u.cl/",
+      "enabled": true,
+      "priority": 3,
+      "tag": "Bollywood / South"
+    },
+    {
+      "id": "movielinkbd",
+      "name": "MovieLinkBD",
+      "baseUrl": "https://x7ykrg.movielinkbd.at/",
+      "enabled": true,
+      "priority": 4,
+      "tag": "Bangla / Dual"
+    }
+  ],
+  "recommendedAddons": [
+    {
+      "id": "torrentio",
+      "name": "Torrentio",
+      "manifestUrl": "https://torrentio.strem.fun/manifest.json",
+      "description": "4K & 1080p global streams",
+      "tag": "4K / Multi",
+      "enabled": true,
+      "isDefault": true,
+      "forceUpdateUrl": true,
+      "priority": 1
+    },
+    {
+      "id": "mediafusion",
+      "name": "MediaFusion ElfHosted",
+      "manifestUrl": "https://mediafusion.elfhosted.com/manifest.json",
+      "description": "Hindi, Bangla & global streams",
+      "tag": "Hindi / Global",
+      "enabled": true,
+      "isDefault": true,
+      "forceUpdateUrl": true,
+      "priority": 2
+    }
+  ],
+  "playbackPolicy": {
+    "defaultPreferredQuality": "1080p",
+    "smartTimeoutEnabled": true,
+    "deadMirrorCutoffMs": 4500,
+    "maxSlowBufferGraceMs": 20000,
+    "maxConcurrentStreamRequests": 4,
+    "enableOfflineDownloads": true,
+    "maxConcurrentDownloads": 2,
+    "downloadChunksPerFile": 4,
+    "enableTrailers": true,
+    "enableMiniPlayer": true
+  },
+  "catalogControl": {
+    "enableHeroBanner": true,
+    "heroAutoRotateSec": 7,
+    "enableCinemetaCharts": true,
+    "enableCommunityLists": true,
+    "pinnedHeroItems": [],
+    "blockedTmdbIds": [],
+    "blockedKeywords": [],
+    "pinnedCommunityLists": [],
+    "curatedRails": [],
+    "curatedSection": {
+      "enabled": false,
+      "title": "Editor's Picks",
+      "subtitle": "Handpicked for you",
+      "items": []
+    }
+  },
+  "subtitlesControl": {
+    "enableSubtitles": true,
+    "enableBanglaAiTranslation": true,
+    "enableBilingualMode": true,
+    "geminiModel": "gemini-3-flash-preview",
+    "defaultFontSizeSp": 20,
+    "defaultTextColor": "#FFFFFF",
+    "defaultBgOpacity": 0.55,
+    "defaultOutline": true,
+    "defaultBoldBangla": true,
+    "providers": {
+      "opensubtitles": {
+        "enabled": true,
+        "priority": 1
+      },
+      "subtitlecat": {
+        "enabled": true,
+        "priority": 2
+      },
+      "subdl": {
+        "enabled": true,
+        "priority": 3
+      },
+      "subsource": {
+        "enabled": true,
+        "priority": 4
+      }
+    }
+  },
+  "appControl": {
+    "enableCloudSync": true,
+    "defaultAccentColor": "ROYAL_GOLD",
+    "maintenanceMode": false,
+    "maintenanceTitle": "Scheduled Upgrade in Progress",
+    "maintenanceMessage": "THIVO is upgrading streaming resolvers. We will be back shortly.",
+    "announcement": {
+      "id": "notice_v20",
+      "enabled": false,
+      "type": "info",
+      "title": "",
+      "message": "",
+      "actionLabel": "",
+      "actionUrl": "",
+      "dismissible": true
+    }
+  },
+  "ota": {
+    "enabled": false,
+    "latestVersionCode": 21,
+    "minSupportedVersionCode": 0,
+    "latestVersionName": "2.0.1",
+    "apkDownloadUrl": "",
+    "changelog": "",
+    "forceUpdate": false
   }
 }
