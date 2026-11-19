@@ -1,6 +1,6 @@
 {
   "schemaVersion": 20,
-  "updatedAt": "2026-11-19T06:12:17.963Z",
+  "updatedAt": "2026-11-19T06:14:10.283Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -128,6 +128,17 @@
       "isDefault": true,
       "forceUpdateUrl": true,
       "priority": 2
+    },
+    {
+      "id": "cncverse",
+      "name": "cncverse",
+      "manifestUrl": "https://cncverse.dpdns.org/u/p_2tsnrc8tuym1/manifest.json",
+      "description": "cncverse Stremio Addon",
+      "tag": "Remote",
+      "enabled": true,
+      "isDefault": true,
+      "forceUpdateUrl": true,
+      "priority": 3
     }
   ],
   "playbackPolicy": {
