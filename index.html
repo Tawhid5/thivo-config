@@ -2,878 +2,2099 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>THIVO Command Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>THIVO • v20 Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #070a12;
-      --surface: rgba(17, 23, 38, 0.8);
-      --border: rgba(255, 255, 255, 0.1);
-      --amber: #f59e0b;
-      --amber-soft: rgba(245, 158, 11, 0.16);
-      --green: #10b981;
-      --red: #ef4444;
-      --text: #f8fafc;
-      --muted: #94a3b8;
+      --bg-0: #05070E;
+      --bg-1: #090D18;
+      --card: rgba(14, 20, 34, 0.82);
+      --card-elevated: rgba(19, 27, 46, 0.9);
+      --input: rgba(7, 11, 20, 0.92);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-highlight: rgba(245, 158, 11, 0.38);
+      --text: #F8FAFC;
+      --text-2: #CBD5E1;
+      --muted: #64748B;
+      --amber: #F59E0B;
+      --amber-light: #FBBF24;
+      --amber-deep: #D97706;
+      --cyan: #06B6D4;
+      --cyan-light: #38BDF8;
+      --emerald: #10B981;
+      --rose: #F43F5E;
+      --violet: #8B5CF6;
+      --radius-xl: 22px;
+      --radius-lg: 16px;
+      --radius-md: 13px;
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
     body {
-      margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: radial-gradient(circle at top right, #1e1b4b 0%, var(--bg) 45%);
-      color: var(--text); min-height: 100vh; padding-bottom: 88px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-0);
+      background-image:
+        radial-gradient(circle at 12% 0%, rgba(245, 158, 11, 0.14), transparent 38%),
+        radial-gradient(circle at 88% 6%, rgba(6, 182, 212, 0.12), transparent 38%),
+        radial-gradient(circle at 50% 100%, rgba(139, 92, 246, 0.08), transparent 45%),
+        linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 112px;
+      line-height: 1.5;
+      overflow-x: hidden;
     }
-    .topbar {
-      position: sticky; top: 0; z-index: 40;
-      display: flex; align-items: center; justify-content: space-between; gap: 10px;
-      padding: 12px 16px; background: rgba(7, 10, 18, 0.84);
-      backdrop-filter: blur(18px); border-bottom: 1px solid var(--border);
-    }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; letter-spacing: 0.3px; }
-    .brand-dot {
-      width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, #f59e0b, #d97706);
-      display: grid; place-items: center; color: #000; font-weight: 900; font-size: 14px; flex-shrink: 0;
-    }
-    .badge { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: var(--amber-soft); color: var(--amber); font-weight: 700; }
-    .container { max-width: 780px; margin: 0 auto; padding: 14px; }
-    .card {
-      background: var(--surface); backdrop-filter: blur(16px);
-      border: 1px solid var(--border); border-radius: 18px; padding: 16px; margin-bottom: 14px;
-    }
-    .card-title { font-size: 15px; font-weight: 700; margin: 0 0 4px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .card-sub { font-size: 12px; color: var(--muted); margin: 0 0 12px; line-height: 1.4; }
-    label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 5px; font-weight: 600; }
-    input, select, textarea {
-      width: 100%; background: rgba(7, 10, 18, 0.72); color: var(--text);
-      border: 1px solid var(--border); border-radius: 12px; padding: 11px 12px;
-      font-size: 14px; outline: none; font-family: inherit;
-    }
-    input:focus, select:focus, textarea:focus { border-color: var(--amber); }
-    textarea { min-height: 74px; resize: vertical; }
-    .row { display: flex; gap: 8px; align-items: center; }
-    .row > * { flex: 1; min-width: 0; }
-    .row-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
-    .row-wrap > * { flex: 1 1 200px; min-width: 0; }
-    .btn {
-      border: 0; border-radius: 12px; padding: 10px 14px; font-size: 13px; font-weight: 700;
-      cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      transition: opacity .15s, transform .1s;
-    }
-    .btn:active { transform: scale(0.98); }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-primary { background: linear-gradient(135deg, #f59e0b, #d97706); color: #0b0f1a; }
-    .btn-glass { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid var(--border); }
-    .btn-danger { background: rgba(239,68,68,0.16); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
-    .btn-sm { padding: 7px 10px; font-size: 12px; border-radius: 9px; }
-    .toggle-row {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .toggle-row:last-child { border-bottom: 0; padding-bottom: 0; }
-    .toggle-title { font-size: 14px; font-weight: 600; }
-    .toggle-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .switch {
-      position: relative; width: 46px; height: 26px; flex-shrink: 0;
-      background: rgba(255,255,255,0.15); border-radius: 999px; cursor: pointer; transition: .2s;
-    }
-    .switch.on { background: var(--amber); }
-    .switch::after {
-      content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px;
-      border-radius: 50%; background: #fff; transition: .2s;
-    }
-    .switch.on::after { transform: translateX(20px); background: #070a12; }
-    .addon-item {
-      background: rgba(7,10,18,0.62); border: 1px solid var(--border);
-      border-radius: 14px; padding: 12px; margin-bottom: 10px;
-    }
-    .addon-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-    .addon-title { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; min-width: 0; }
-    .addon-url { font-size: 11px; color: var(--muted); word-break: break-all; margin: 6px 0 8px; }
-    .actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-    .bottom-nav {
-      position: fixed; bottom: 10px; left: 10px; right: 10px; z-index: 40;
-      max-width: 760px; margin: 0 auto;
-      display: flex; background: rgba(11, 15, 26, 0.92); backdrop-filter: blur(20px);
-      border: 1px solid var(--border); border-radius: 20px; padding: 5px;
-    }
-    .nav-btn {
-      flex: 1; background: transparent; border: 0; color: var(--muted);
-      padding: 8px 4px; border-radius: 14px; font-size: 11px; font-weight: 700; cursor: pointer;
-    }
-    .nav-btn.active { background: var(--amber-soft); color: var(--amber); }
-    .toast {
-      position: fixed; top: 66px; left: 50%; transform: translateX(-50%); z-index: 90;
-      padding: 10px 16px; border-radius: 999px; font-size: 13px; font-weight: 700;
-      background: #0f172a; border: 1px solid var(--amber); color: #fff;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none; max-width: 90vw; text-align: center;
-    }
+
     .hidden { display: none !important; }
-    .pill { font-size: 10px; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--muted); font-weight: 700; }
-    .pill.star { background: var(--amber-soft); color: var(--amber); }
-    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-    .chip {
-      font-size: 11px; padding: 5px 10px; border-radius: 999px; cursor: pointer;
-      background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--muted);
+
+    .shell {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 16px 14px 36px;
     }
-    .chip:hover { border-color: var(--amber); color: var(--text); }
-    pre {
-      background: #04060c; padding: 12px; border-radius: 12px; overflow: auto;
-      font-size: 11px; color: #cbd5e1; max-height: 380px; border: 1px solid var(--border);
+
+    /* --- TOP COMMAND HEADER --- */
+    .hero-header {
+      background: linear-gradient(180deg, rgba(16, 23, 40, 0.92), rgba(10, 15, 27, 0.88));
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: var(--radius-xl);
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--amber-light), var(--cyan-light), transparent);
+      opacity: 0.65;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+    }
+
+    .brand-emblem {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 55%, #B45309 100%);
+      color: #05070E;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 900;
+      font-size: 23px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+    }
+
+    .brand-info { flex: 1; min-width: 0; }
+
+    .brand-title-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .brand-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      color: #FFFFFF;
+    }
+
+    .hud-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 999px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .hud-pill.amber {
+      background: rgba(245, 158, 11, 0.14);
+      color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.38);
+    }
+    .hud-pill.cyan {
+      background: rgba(6, 182, 212, 0.14);
+      color: #38BDF8;
+      border: 1px solid rgba(6, 182, 212, 0.38);
+    }
+    .hud-pill.emerald {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.38);
+    }
+    .hud-pill.rose {
+      background: rgba(244, 63, 94, 0.15);
+      color: #FDA4AF;
+      border: 1px solid rgba(244, 63, 94, 0.38);
+    }
+    .hud-pill.violet {
+      background: rgba(139, 92, 246, 0.16);
+      color: #C4B5FD;
+      border: 1px solid rgba(139, 92, 246, 0.38);
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: #94A3B8;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* --- 2x2 ACTION DECK --- */
+    .action-deck {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    @media (min-width: 720px) {
+      .action-deck { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .deck-btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(18, 25, 43, 0.85);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.18s ease;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+    .deck-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.22);
+      background: rgba(26, 36, 60, 0.92);
+    }
+    .deck-btn:active { transform: translateY(0); }
+
+    .deck-btn.publish {
+      background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 60%, #D97706 100%);
+      color: #05070E;
+      border-color: rgba(251, 191, 36, 0.6);
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.32), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+    }
+    .deck-btn.publish:hover {
+      box-shadow: 0 10px 28px rgba(245, 158, 11, 0.48);
+    }
+
+    /* --- 2x2 TELEMETRY HUD GRID --- */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 11px;
+      margin-bottom: 16px;
+    }
+    @media (min-width: 820px) {
+      .telemetry-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .telemetry-card {
+      background: linear-gradient(165deg, rgba(17, 24, 42, 0.88), rgba(11, 16, 29, 0.88));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 14px 15px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+    }
+    .telemetry-card::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 65px; height: 65px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.1), transparent 70%);
+      pointer-events: none;
+    }
+    .t-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #94A3B8;
+      letter-spacing: 0.2px;
+    }
+    .t-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .t-sub {
+      font-size: 11.5px;
+      color: #64748B;
+      margin-top: 3px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* --- SECTION CARDS --- */
+    .panel-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media (min-width: 900px) {
+      .panel-grid.two-col { grid-template-columns: 1fr 1fr; align-items: start; }
+    }
+
+    .hud-card {
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 18px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .icon-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: var(--amber-light);
+      box-shadow: 0 6px 18px rgba(245, 158, 11, 0.15);
+    }
+    .icon-badge.cyan {
+      background: rgba(6, 182, 212, 0.12);
+      border-color: rgba(6, 182, 212, 0.35);
+      color: var(--cyan-light);
+      box-shadow: 0 6px 18px rgba(6, 182, 212, 0.15);
+    }
+    .icon-badge.emerald {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.35);
+      color: #34D399;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.15);
+    }
+    .icon-badge.violet {
+      background: rgba(139, 92, 246, 0.14);
+      border-color: rgba(139, 92, 246, 0.38);
+      color: #C4B5FD;
+      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.15);
+    }
+    .icon-badge.rose {
+      background: rgba(244, 63, 94, 0.14);
+      border-color: rgba(244, 63, 94, 0.38);
+      color: #FDA4AF;
+      box-shadow: 0 6px 18px rgba(244, 63, 94, 0.15);
+    }
+
+    .card-title-wrap { flex: 1; min-width: 0; }
+    .card-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16.5px;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1.3;
+    }
+    .card-desc {
+      font-size: 12.5px;
+      color: #94A3B8;
+      margin-top: 3px;
+      line-height: 1.45;
+    }
+
+    /* --- FORMS & CONTROLS --- */
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #CBD5E1;
+      margin: 12px 0 6px;
+      letter-spacing: 0.2px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--input);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 13px;
+      padding: 12px 14px;
+      font-size: 13.5px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.16s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.16);
+    }
+    textarea { min-height: 76px; resize: vertical; }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 540px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 11px 15px;
+      font-size: 13px;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.16s ease;
+      flex-shrink: 0;
+    }
+    .btn:hover { border-color: rgba(255, 255, 255, 0.24); transform: translateY(-1px); }
+    .btn-amber {
+      background: linear-gradient(135deg, #FBBF24, #D97706);
+      color: #05070E;
+      border-color: rgba(251, 191, 36, 0.5);
+      box-shadow: 0 6px 18px rgba(245, 158, 11, 0.28);
+    }
+    .btn-cyan {
+      background: rgba(6, 182, 212, 0.16);
+      color: #38BDF8;
+      border-color: rgba(6, 182, 212, 0.4);
+    }
+    .btn-emerald {
+      background: linear-gradient(135deg, #34D399, #059669);
+      color: #04130D;
+      border: none;
+    }
+    .btn-danger {
+      background: rgba(244, 63, 94, 0.14);
+      color: #FDA4AF;
+      border-color: rgba(244, 63, 94, 0.32);
+    }
+    .btn-sm {
+      padding: 7px 11px;
+      font-size: 11.5px;
+      border-radius: 10px;
+    }
+
+    /* --- ENGINE & ADDON CARDS --- */
+    .engine-card {
+      background: linear-gradient(180deg, rgba(10, 15, 28, 0.9), rgba(7, 11, 20, 0.9));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 13px;
+      margin-bottom: 10px;
+      transition: border 0.18s ease, opacity 0.18s ease;
+    }
+    .engine-card:hover { border-color: rgba(245, 158, 11, 0.32); }
+    .engine-card.disabled { opacity: 0.52; }
+
+    .engine-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .rank-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #FBBF24;
+      font-size: 11.5px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* --- SWITCHES --- */
+    .toggle-tile {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(10, 15, 27, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      margin-bottom: 9px;
+      cursor: pointer;
+      user-select: none;
+      transition: border 0.15s ease;
+    }
+    .toggle-tile:hover { border-color: rgba(255, 255, 255, 0.16); }
+    .tile-title { font-size: 13.5px; font-weight: 700; color: #F8FAFC; }
+    .tile-sub { font-size: 11.5px; color: #94A3B8; margin-top: 2px; }
+
+    .switch {
+      width: 46px;
+      height: 25px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      position: relative;
+      transition: 0.2s ease;
+      flex-shrink: 0;
+    }
+    .switch::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 19px; height: 19px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      transition: 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+    }
+    .switch.on {
+      background: linear-gradient(135deg, #10B981, #059669);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+    }
+    .switch.on::after { transform: translateX(21px); }
+
+    /* --- CHIPS & PRESETS --- */
+    .chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+    }
+    .preset-chip {
+      appearance: none;
+      background: rgba(6, 182, 212, 0.11);
+      border: 1px solid rgba(6, 182, 212, 0.32);
+      color: #7DD3FC;
+      padding: 7px 12px;
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .preset-chip:hover {
+      background: rgba(6, 182, 212, 0.22);
+      transform: translateY(-1px);
+    }
+    .preset-chip.amber {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.35);
+      color: #FDE68A;
+    }
+
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.34);
+      color: #FDE68A;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .tag-chip button {
+      border: none;
+      background: none;
+      color: #FDA4AF;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    /* --- THEME SWATCH GRID --- */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+      gap: 9px;
+      margin-top: 10px;
+    }
+    .swatch-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      border-radius: 13px;
+      background: rgba(10, 15, 27, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .swatch-item.active {
+      border-color: var(--amber);
+      background: rgba(245, 158, 11, 0.14);
+      box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.4), 0 8px 20px rgba(0, 0, 0, 0.35);
+    }
+    .swatch-orb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* --- TMDB RESULT ITEM --- */
+    .tmdb-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(9, 13, 24, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .tmdb-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+    .tmdb-thumb {
+      width: 40px;
+      height: 58px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #1E293B;
+      flex-shrink: 0;
+    }
+
+    /* --- FLOATING BOTTOM DOCK NAVIGATION --- */
+    .bottom-dock-wrap {
+      position: fixed;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      z-index: 120;
+      display: flex;
+      justify-content: center;
+      padding: 0 10px;
+      pointer-events: none;
+    }
+
+    .bottom-dock {
+      pointer-events: auto;
+      width: 100%;
+      max-width: 680px;
+      background: rgba(10, 14, 26, 0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 22px;
+      padding: 6px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.78), 0 0 0 1px rgba(245, 158, 11, 0.12);
+    }
+
+    .dock-tab {
+      appearance: none;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #94A3B8;
+      border-radius: 16px;
+      padding: 8px 4px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-family: inherit;
+      transition: all 0.18s ease;
+    }
+    .dock-tab .d-icon { font-size: 17px; line-height: 1; }
+    .dock-tab .d-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1px; }
+    .dock-tab.active {
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.24), rgba(217, 119, 6, 0.12));
+      color: #FBBF24;
+      border-color: rgba(245, 158, 11, 0.45);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 6px 16px rgba(245, 158, 11, 0.18);
+    }
+
+    .sub-composer {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(7, 10, 19, 0.65);
+      border: 1px dashed rgba(255, 255, 255, 0.13);
+    }
+
+    #toast {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 300;
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(16px);
+      color: #F8FAFC;
+      border: 1px solid rgba(245, 158, 11, 0.55);
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.75);
+      display: none;
+      max-width: 92vw;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div id="toast" class="toast"></div>
+  <div id="toast"></div>
 
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-dot">T</div>
-      <div>THIVO <span class="badge">ADMIN</span> <span id="verBadge" class="pill hidden">v1</span></div>
-    </div>
-    <div id="topActions" class="row hidden" style="flex:0 0 auto;">
-      <button class="btn btn-glass btn-sm" onclick="loadConfig()">Refresh</button>
-      <button class="btn btn-primary btn-sm" id="publishBtn" onclick="publishConfig()">Publish Live</button>
-      <button class="btn btn-danger btn-sm" onclick="logout()">Exit</button>
-    </div>
-  </header>
+  <div class="shell">
+    <!-- TOP COMMAND CENTER HEADER -->
+    <header class="hero-header">
+      <div class="brand-row">
+        <div class="brand-emblem">T</div>
+        <div class="brand-info">
+          <div class="brand-title-row">
+            <span class="brand-name">THIVO</span>
+            <span class="hud-pill amber">v20 COMMAND CENTER</span>
+            <span class="hud-pill amber">v20</span>
+            <span id="connPill" class="hud-pill cyan">Live Preview</span>
+            <span id="dirtyBadge" class="hud-pill rose hidden">● Unsaved</span>
+          </div>
+          <div class="brand-sub">Direct Movie Sites • Stremio Addons • Smart Buffering • TMDB Catalog &amp; OTA</div>
+        </div>
+      </div>
 
-  <main class="container">
-    <!-- LOGIN -->
-    <section id="loginView" class="card" style="margin-top:24px;">
-      <h2 class="card-title"><span>Unlock THIVO Command Center</span></h2>
-      <p class="card-sub">Token is saved only on this device. Updates publish live automatically to all THIVO apps.</p>
-      <label>GitHub Username</label>
-      <input id="ghOwner" value="Tawhid5" />
-      <label>Config Repository</label>
-      <input id="ghRepo" value="thivo-config" />
-      <label>Branch</label>
-      <input id="ghBranch" value="main" />
-      <label>Fine-Grained Personal Access Token (github_pat_...)</label>
-      <input id="ghToken" type="password" placeholder="Paste token with Contents: Read & Write permission" />
-      <div style="margin-top:16px;">
-        <button class="btn btn-primary" style="width:100%;" onclick="connectGitHub()">Connect & Load Live Config</button>
+      <!-- 2x2 ACTION DECK -->
+      <div class="action-deck">
+        <button class="deck-btn" onclick="toggleGithubBox()">🔑 GitHub Setup</button>
+        <button class="deck-btn" title="Pull latest live config.json from GitHub" onclick="loadFromGithub(true)">↻ Sync Live</button>
+        <button id="publishBtn" class="deck-btn publish" onclick="publishToGithub()">▲ Publish Live</button>
+        <button class="deck-btn" onclick="copyThisHtmlCode()">📋 Copy HTML Code</button>
+      </div>
+    </header>
+
+    <!-- COLLAPSIBLE GITHUB CREDENTIALS DRAWER -->
+    <div id="githubBox" class="hud-card hidden" style="border-color:rgba(245,158,11,0.5);">
+      <div class="card-header">
+        <div class="icon-badge">🔑</div>
+        <div class="card-title-wrap">
+          <div class="card-title">GitHub Live Repository Connection</div>
+          <div class="card-desc">Connect your GitHub Personal Access Token once to push `config.json` updates directly to all THIVO users.</div>
+        </div>
+        <button class="btn btn-sm" onclick="toggleGithubBox(false)">✕ Close</button>
+      </div>
+      <div class="grid-2">
+        <div><label>GitHub Owner</label><input id="ghOwner" value="Tawhid5" /></div>
+        <div><label>Repository Name</label><input id="ghRepo" value="thivo-config" /></div>
+      </div>
+      <div class="grid-2">
+        <div><label>Target Branch</label><input id="ghBranch" value="main" /></div>
+        <div>
+          <label>Personal Access Token (ghp_... / github_pat_...)</label>
+          <input id="ghToken" type="password" placeholder="Paste GitHub Personal Access Token..." />
+        </div>
+      </div>
+      <div class="input-row" style="margin-top:14px;">
+        <button class="btn btn-amber" onclick="saveGithubAuth()">💾 Save &amp; Connect</button>
+        <button class="btn btn-danger btn-sm" onclick="clearGithubAuth()">Clear Saved Token</button>
+      </div>
+    </div>
+
+    <!-- 2x2 LIVE TELEMETRY HUD CARDS -->
+    <section class="telemetry-grid">
+      <div class="telemetry-card">
+        <div class="t-label">Schema Revision</div>
+        <div class="t-value" id="hudSchema">v20</div>
+        <div class="t-sub" id="hudSyncSub">Ready</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="t-label">Active Stream Engines</div>
+        <div class="t-value" id="hudEngines">4 Direct • 0 Addons</div>
+        <div class="t-sub" id="hudDefaultEngine">Default: rogmovies</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="t-label">Catalog &amp; Home Rails</div>
+        <div class="t-value" id="hudCatalog">IN • 8/8 Rails</div>
+        <div class="t-sub" id="hudDynamicRails">0 dynamic rails • 0 pins</div>
+      </div>
+      <div class="telemetry-card">
+        <div class="t-label">App Status &amp; Theme</div>
+        <div class="t-value" id="hudStatus">All Clear</div>
+        <div class="t-sub" id="hudThemeSub">ROYAL_GOLD</div>
       </div>
     </section>
 
-    <!-- DASHBOARD -->
-    <section id="dashView" class="hidden">
-      <!-- TAB 1: SOURCES & PLAYBACK -->
-      <div id="tab-sources" class="tab-pane">
-        <div class="card">
-          <div class="card-title"><span>Add Stremio Addon</span></div>
-          <p class="card-sub">Paste a manifest.json or stremio:// link and test before publishing.</p>
-          <label>Addon Manifest URL</label>
-          <div class="row">
-            <input id="newAddonUrl" placeholder="https://.../manifest.json or stremio://..." />
-            <button class="btn btn-glass btn-sm" style="flex:0 0 auto;" onclick="testAddonUrl()">Test</button>
-          </div>
-          <div id="addonTestMsg" style="font-size:12px;margin-top:6px;color:var(--amber);"></div>
-          <div class="row-wrap">
-            <div>
-              <label>Display Name</label>
-              <input id="newAddonName" placeholder="e.g. PlavioHD / CNCVerse" />
+    <!-- ====================================================
+         TAB 1: SOURCES (Direct Movie Sites + Stremio Addons)
+         ==================================================== -->
+    <main id="tab-sources" class="tab-pane">
+      <div class="panel-grid two-col">
+        <!-- DIRECT MOVIE SITES -->
+        <div class="hud-card">
+          <div class="card-header">
+            <div class="icon-badge cyan">🌐</div>
+            <div class="card-title-wrap">
+              <div class="card-title">Configurable Direct Movie Sites (<span id="directCountLabel">4</span>)</div>
+              <div class="card-desc">Powers MultiSiteMediaResolver (RogMovies, VegaMovies, HDHub4u, MovieLinkBD). Update mirror domains &amp; priority live without an APK update.</div>
             </div>
-            <div>
-              <label>Badge</label>
-              <input id="newAddonBadge" placeholder="e.g. Hindi / 4K" />
-            </div>
+            <button class="btn btn-sm" onclick="resetDefaultSites()">↺ Defaults</button>
           </div>
-          <div style="margin-top:12px;">
-            <button class="btn btn-primary" style="width:100%;" onclick="addAddon()">+ Add to Remote List</button>
+
+          <label style="margin-top:0;">Default Primary Stream Provider</label>
+          <select id="defaultProviderSelect" onchange="cfg.defaultProviderId=this.value;setDirty()" style="margin-bottom:14px;"></select>
+
+          <!-- ACTIVE SITES LIST -->
+          <div id="directSitesContainer"></div>
+
+          <!-- ADD NEW DIRECT SITE -->
+          <div class="sub-composer">
+            <div style="font-size:13px;font-weight:800;color:var(--amber-light);margin-bottom:4px;">+ Add New Direct Mirror Site</div>
+            <div class="grid-2">
+              <div>
+                <label>Site Name</label>
+                <input id="newSiteName" placeholder="e.g. RogMovies / VegaMovies" />
+              </div>
+              <div>
+                <label>Audio / Quality Tag</label>
+                <input id="newSiteTag" placeholder="e.g. Dual Audio / Bangla" />
+              </div>
+            </div>
+            <label>Base Mirror Domain URL</label>
+            <div class="input-row">
+              <input id="newSiteUrl" placeholder="https://rogmovies.cyou/" style="font-family:'JetBrains Mono',monospace;font-size:12.5px;" />
+              <button class="btn btn-amber" onclick="addNewDirectSite()">+ Add Site</button>
+            </div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-title"><span>Remote Addons (<span id="addonCount">0</span>)</span></div>
-          <p class="card-sub">Order controls stream priority. Tap ★ Pin Default to auto-select it first in player.</p>
-          <div id="addonsList"></div>
+        <!-- STREMIO ADDONS MANAGER -->
+        <div class="hud-card">
+          <div class="card-header">
+            <div class="icon-badge emerald">🧩</div>
+            <div class="card-title-wrap">
+              <div class="card-title">Remote Stremio Addons (<span id="addonCountLabel">0</span>)</div>
+              <div class="card-desc">Push Stremio addons to all THIVO users or remove them anytime. Deleted addons are automatically removed from the app on sync.</div>
+            </div>
+          </div>
+
+          <div style="font-size:11.5px;font-weight:700;color:#94A3B8;margin-bottom:6px;">⚡ 1-Click Quick Add Presets (Optional):</div>
+          <div class="chip-wrap" style="margin-bottom:14px;">
+            <button type="button" class="preset-chip" onclick="quickAddAddon('Torrentio','https://torrentio.strem.fun/manifest.json','4K / Multi')">+ Torrentio</button>
+            <button type="button" class="preset-chip" onclick="quickAddAddon('MediaFusion','https://mediafusion.elfhosted.com/manifest.json','Hindi / Global')">+ MediaFusion</button>
+            <button type="button" class="preset-chip" onclick="quickAddAddon('CyberFlix','https://cyberflix.elfhosted.com/manifest.json','Catalog')">+ CyberFlix</button>
+            <button type="button" class="preset-chip" onclick="quickAddAddon('StreamingCatalogs','https://7a82163c306e-stremio-netflix-catalog-addon.baby-beamup.club/manifest.json','OTT Charts')">+ OTT Catalogs</button>
+            <button type="button" class="preset-chip" onclick="quickAddAddon('Anime Kitsu','https://anime-kitsu.strem.fun/manifest.json','Anime')">+ Anime Kitsu</button>
+          </div>
+
+          <!-- ACTIVE ADDONS LIST (Empty by default) -->
+          <div id="addonsContainer"></div>
+
+          <!-- ADD CUSTOM STREMIO ADDON -->
+          <div class="sub-composer">
+            <div style="font-size:13px;font-weight:800;color:var(--cyan-light);margin-bottom:4px;">+ Add Custom Stremio Manifest</div>
+            <div class="grid-2">
+              <div>
+                <label>Addon Name</label>
+                <input id="newAddonName" placeholder="e.g. KnightCrawler / Comet" />
+              </div>
+              <div>
+                <label>Badge Tag</label>
+                <input id="newAddonTag" placeholder="e.g. 4K / Debrid / Regional" />
+              </div>
+            </div>
+            <label>Manifest URL (`https://.../manifest.json` or `stremio://`)</label>
+            <div class="input-row">
+              <input id="newAddonUrl" placeholder="https://.../manifest.json" style="font-family:'JetBrains Mono',monospace;font-size:12.5px;" />
+              <button class="btn btn-amber" onclick="addCustomAddon()">+ Add Addon</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ====================================================
+         TAB 2: PLAYER (Smart Timeout & 4x/8x Turbo Downloads)
+         ==================================================== -->
+    <main id="tab-player" class="tab-pane hidden">
+      <div class="panel-grid two-col">
+        <div class="hud-card">
+          <div class="card-header">
+            <div class="icon-badge">⚡</div>
+            <div class="card-title-wrap">
+              <div class="card-title">Smart Adaptive Timeout &amp; Mirror Failover</div>
+              <div class="card-desc">Automatically skips zero-byte dead servers while giving actively transferring slow streams extra buffer grace.</div>
+            </div>
+          </div>
+
+          <div style="font-size:11.5px;font-weight:700;color:#94A3B8;margin-bottom:6px;">⚡ 1-Click Network Tuning Presets:</div>
+          <div class="chip-wrap" style="margin-bottom:14px;">
+            <button type="button" class="preset-chip amber" onclick="applySpeedPreset(3200,14000,6,'Esports Fast Switch (3.2s)')">🚀 Fast Switch (3.2s / 14s)</button>
+            <button type="button" class="preset-chip" onclick="applySpeedPreset(4500,20000,4,'Balanced Recommended (4.5s)')">⚖️ Balanced (4.5s / 20s)</button>
+            <button type="button" class="preset-chip" onclick="applySpeedPreset(7500,35000,3,'Slow Network Safe (7.5s)')">📶 Slow Net Safe (7.5s / 35s)</button>
+          </div>
+
+          <label>Default Preferred Stream Resolution</label>
+          <select id="prefQualityInput" onchange="cfg.playbackPolicy.defaultPreferredQuality=this.value;setDirty()">
+            <option value="Auto">Auto (Adaptive Best Stream)</option>
+            <option value="2160p">2160p 4K UHD</option>
+            <option value="1080p">1080p Full HD (Recommended)</option>
+            <option value="720p">720p HD (Data Saver)</option>
+            <option value="480p">480p SD</option>
+          </select>
+
+          <div class="toggle-tile" style="margin-top:12px;" onclick="flipBool('playbackPolicy.smartTimeoutEnabled')">
+            <div>
+              <div class="tile-title">Smart Dynamic Mirror Failover</div>
+              <div class="tile-sub">Instant dead-link skip + active byte-rate buffer extension</div>
+            </div>
+            <div id="swSmartTimeout" class="switch"></div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label>Dead Mirror Cutoff (ms)</label>
+              <input id="deadMirrorInput" type="number" step="500" oninput="cfg.playbackPolicy.deadMirrorCutoffMs=Number(this.value||4500);setDirty()" />
+            </div>
+            <div>
+              <label>Slow Buffer Grace (ms)</label>
+              <input id="slowBufferInput" type="number" step="1000" oninput="cfg.playbackPolicy.maxSlowBufferGraceMs=Number(this.value||20000);setDirty()" />
+            </div>
+          </div>
+
+          <label>Max Concurrent Stream Extraction Requests</label>
+          <select id="maxStreamReqInput" onchange="cfg.playbackPolicy.maxConcurrentStreamRequests=Number(this.value);setDirty()">
+            <option value="2">2 Parallel Requests</option>
+            <option value="4">4 Parallel Requests (Recommended)</option>
+            <option value="6">6 Parallel Requests (Turbo)</option>
+            <option value="8">8 Parallel Requests (Max)</option>
+          </select>
         </div>
 
-        <div class="card">
-          <div class="card-title"><span>Built-In Stream Engines & Playback</span></div>
-          <p class="card-sub">Remotely enable/disable built-in resolvers and playback rules.</p>
-          <div id="builtInToggles"></div>
+        <div class="hud-card">
+          <div class="card-header">
+            <div class="icon-badge cyan">📥</div>
+            <div class="card-title-wrap">
+              <div class="card-title">Multi-Chunk Download Engine &amp; Features</div>
+              <div class="card-desc">Configure parallel range-chunk acceleration, YouTube trailers, and floating Mini-Player.</div>
+            </div>
+          </div>
 
-          <label>Default Recommended Provider</label>
-          <select id="defaultProviderSelect" onchange="cfg.defaultProviderId = this.value; renderAddons(); renderCustomProviders(); renderJsonPreview()"></select>
-
-          <div class="row-wrap">
+          <div class="toggle-tile" onclick="flipBool('playbackPolicy.enableOfflineDownloads')">
             <div>
-              <label>Default Preferred Quality</label>
-              <select id="prefQuality" onchange="cfg.playback.preferredDefaultQuality = this.value; renderJsonPreview()">
-                <option value="1080p">1080p Full HD (Recommended)</option>
-                <option value="720p">720p Data Saver</option>
-                <option value="2160p">2160p 4K UHD</option>
-                <option value="Auto">Auto</option>
+              <div class="tile-title">Enable Offline Video Downloads</div>
+              <div class="tile-sub">Allow users to download movies &amp; episodes inside the app</div>
+            </div>
+            <div id="swDownloads" class="switch"></div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label>Download Acceleration (Chunks / File)</label>
+              <select id="dlChunksInput" onchange="cfg.playbackPolicy.downloadChunksPerFile=Number(this.value);setDirty()">
+                <option value="2">2x Chunks (Standard)</option>
+                <option value="4">4x Chunks (Turbo • Default)</option>
+                <option value="6">6x Chunks (Ultra Fast)</option>
+                <option value="8">8x Chunks (Extreme)</option>
               </select>
             </div>
             <div>
-              <label>Per-Server Timeout (3–20 sec)</label>
-              <input id="providerTimeout" type="number" min="3" max="20" oninput="updateTimeout(this.value)" />
-            </div>
-          </div>
-
-          <div class="toggle-row" style="margin-top:8px;">
-            <div>
-              <div class="toggle-title">Prefer H.264 / MP4 over 10-bit HEVC</div>
-              <div class="toggle-desc">Prevents green screen, lag & audio drop on mid-range devices</div>
-            </div>
-            <div id="swH264" class="switch" onclick="toggleBool('playback.preferH264OverHevc', this)"></div>
-          </div>
-
-          <label>Blocked Stream Hosts (comma separated)</label>
-          <input id="blockedHostsInput" placeholder="e.g. brokenhost.xyz, spamcdn.net" oninput="updateBlockedHosts()" />
-        </div>
-
-        <div class="card">
-          <div class="card-title"><span>Custom Direct / JSON Endpoints (<span id="customCount">0</span>)</span></div>
-          <p class="card-sub">Supports {tmdb}, {tmdbId}, {imdb}, {imdbId}, {title}, {year}, {season}, {episode}.</p>
-          <div class="row-wrap">
-            <div>
-              <label>Source Name</label>
-              <input id="custName" placeholder="e.g. FastMirror" />
-            </div>
-            <div>
-              <label>Mode</label>
-              <select id="custMode">
-                <option value="auto">Auto Detect</option>
-                <option value="json">JSON API</option>
-                <option value="embed">Web Embed</option>
-                <option value="direct">Direct HLS/MP4</option>
+              <label>Max Simultaneous Downloads</label>
+              <select id="maxDlInput" onchange="cfg.playbackPolicy.maxConcurrentDownloads=Number(this.value);setDirty()">
+                <option value="1">1 Active Download</option>
+                <option value="2">2 Active Downloads (Default)</option>
+                <option value="3">3 Active Downloads</option>
+                <option value="4">4 Active Downloads</option>
               </select>
             </div>
           </div>
-          <label>Endpoint URL Template</label>
-          <input id="custUrl" placeholder="https://api.site/watch/{tmdb}?s={season}&e={episode}" />
-          <div class="row-wrap">
+
+          <div class="toggle-tile" style="margin-top:12px;" onclick="flipBool('playbackPolicy.enableTrailers')">
             <div>
-              <label>JSON Field Path (optional, JSON mode)</label>
-              <input id="custJsonPath" placeholder="e.g. data.url or sources[0].file" />
+              <div class="tile-title">YouTube Trailers &amp; TMDB Video Previews</div>
+              <div class="tile-sub">Show Watch Trailer button on Hero &amp; Detail Screen</div>
+            </div>
+            <div id="swTrailers" class="switch"></div>
+          </div>
+
+          <div class="toggle-tile" onclick="flipBool('playbackPolicy.enableMiniPlayer')">
+            <div>
+              <div class="tile-title">Floating In-App Mini-Player &amp; PiP</div>
+              <div class="tile-sub">Keep playing video in a dockable mini overlay while browsing</div>
+            </div>
+            <div id="swMiniPlayer" class="switch"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ====================================================
+         TAB 3: CATALOG (TMDB Search, Community Lists, Rails)
+         ==================================================== -->
+    <main id="tab-catalog" class="tab-pane hidden">
+      <div class="panel-grid two-col">
+        <div>
+          <!-- LIVE TMDB SEARCH -->
+          <div class="hud-card">
+            <div class="card-header">
+              <div class="icon-badge">🔍</div>
+              <div class="card-title-wrap">
+                <div class="card-title">Live TMDB Spotlight &amp; Safety Search</div>
+                <div class="card-desc">Search any Movie or Series to pin to the Hero Banner, feature in Editor's Picks, or block by TMDB ID.</div>
+              </div>
+            </div>
+            <div class="input-row">
+              <input id="tmdbQuery" placeholder="Search Movie or TV Series (e.g. Pushpa, Dune, Squid Game)..." onkeydown="if(event.key==='Enter')searchTmdb()" />
+              <button class="btn btn-amber" onclick="searchTmdb()">Search</button>
+            </div>
+            <div id="tmdbResults" style="margin-top:8px;"></div>
+
+            <label style="margin-top:14px;">⭐ Pinned Hero Banner Titles (<span id="heroPinCount">0</span>)</label>
+            <div id="heroPinnedChips" class="chip-wrap"></div>
+
+            <label style="margin-top:14px;">🚫 Blocked TMDB IDs (<span id="blockedIdCount">0</span>)</label>
+            <div id="blockedIdChips" class="chip-wrap"></div>
+          </div>
+
+          <!-- HOME & REGION CONTROLS -->
+          <div class="hud-card">
+            <div class="card-header">
+              <div class="icon-badge cyan">🏠</div>
+              <div class="card-title-wrap">
+                <div class="card-title">Home Architecture &amp; Regional Rows</div>
+                <div class="card-desc">Control Hero carousel speed, Cinemeta IMDb charts, and regional content rails.</div>
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-bottom:10px;">
+              <div>
+                <label>Catalog Region Priority</label>
+                <select id="catalogRegionInput" onchange="cfg.catalogControl.region=this.value;setDirty()">
+                  <option value="BD">Bangladesh (BD)</option>
+                  <option value="IN">India (IN)</option>
+                  <option value="US">Global / US</option>
+                </select>
+              </div>
+              <div>
+                <label>Hero Rotate Interval (Sec)</label>
+                <input id="heroSecInput" type="number" min="3" max="20" oninput="cfg.catalogControl.heroAutoRotateSec=Number(this.value||7);setDirty()" />
+              </div>
+            </div>
+
+            <div class="toggle-tile" onclick="flipBool('catalogControl.enableHeroBanner')">
+              <div><div class="tile-title">Hero Spotlight Banner</div><div class="tile-sub">Auto-rotating widescreen spotlight carousel</div></div>
+              <div id="swHero" class="switch"></div>
+            </div>
+            <div class="toggle-tile" onclick="flipBool('catalogControl.enableCinemetaCharts')">
+              <div><div class="tile-title">Cinemeta IMDb Top Charts</div><div class="tile-sub">Live trending movies &amp; series from Cinemeta</div></div>
+              <div id="swCharts" class="switch"></div>
+            </div>
+            <div class="toggle-tile" onclick="flipBool('catalogControl.enableCommunityLists')">
+              <div><div class="tile-title">Trakt-Style Community Poster-Fan Lists</div><div class="tile-sub">Curated multi-poster community collections</div></div>
+              <div id="swComm" class="switch"></div>
+            </div>
+
+            <label>Blocked Safety Keywords (Comma-separated)</label>
+            <input id="blockedKwInput" placeholder="camrip, 18+, betting" oninput="cfg.catalogControl.blockedKeywords=this.value.split(',').map(s=>s.trim()).filter(Boolean);setDirty()" />
+          </div>
+        </div>
+
+        <div>
+          <!-- PINNED COMMUNITY TMDB LISTS -->
+          <div class="hud-card">
+            <div class="card-header">
+              <div class="icon-badge violet">📚</div>
+              <div class="card-title-wrap">
+                <div class="card-title">Pinned Community TMDB Lists</div>
+                <div class="card-desc">Pin official TMDB `/list/{listId}` collections as Trakt-style stacked poster cards on Home.</div>
+              </div>
+            </div>
+            <div class="chip-wrap" style="margin-bottom:12px;">
+              <button type="button" class="preset-chip" onclick="quickAddCommList('634','Marvel Cinematic Universe','MCU')">+ Marvel Universe (#634)</button>
+              <button type="button" class="preset-chip" onclick="quickAddCommList('7068740','IMDb Top 250 Must-Watch','IMDb 250')">+ IMDb Top 250</button>
+              <button type="button" class="preset-chip" onclick="quickAddCommList('8246321','Mind-Bending Sci-Fi Thrillers','Sci-Fi')">+ Mind-Bending Thrillers</button>
+            </div>
+            <div id="commListsContainer"></div>
+            <div class="sub-composer">
+              <div class="grid-2">
+                <input id="newListId" placeholder="TMDB List ID (e.g. 634)" />
+                <input id="newListBadge" placeholder="Badge (e.g. Featured)" />
+              </div>
+              <div class="input-row" style="margin-top:8px;">
+                <input id="newListTitle" placeholder="Custom List Title (e.g. Best Crime Thrillers)" />
+                <button class="btn btn-amber btn-sm" onclick="addCustomCommList()">+ Pin List</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CUSTOM DISCOVER CATEGORY RAILS -->
+          <div class="hud-card">
+            <div class="card-header">
+              <div class="icon-badge emerald">🎞️</div>
+              <div class="card-title-wrap">
+                <div class="card-title">Custom Discover Category Rails</div>
+                <div class="card-desc">Build dynamic genre/language rows for Home &amp; Discover Hub.</div>
+              </div>
+            </div>
+            <div class="chip-wrap" style="margin-bottom:12px;">
+              <button type="button" class="preset-chip" onclick="quickAddRail('Bangla Popular Hits','movie','bn','')">+ Bangla Movies</button>
+              <button type="button" class="preset-chip" onclick="quickAddRail('Bollywood Action Blockbusters','movie','hi','28')">+ Bollywood Action</button>
+              <button type="button" class="preset-chip" onclick="quickAddRail('Korean Drama &amp; Thrillers','tv','ko','')">+ K-Drama Series</button>
+              <button type="button" class="preset-chip" onclick="quickAddRail('Hollywood Sci-Fi &amp; Adventure','movie','en','878')">+ Hollywood Sci-Fi</button>
+            </div>
+            <div id="customRailsContainer"></div>
+            <div class="sub-composer">
+              <div class="grid-2">
+                <input id="railTitleInput" placeholder="Rail Title (e.g. South Hindi Action)" />
+                <select id="railTypeInput"><option value="movie">Movies</option><option value="tv">TV Series</option></select>
+              </div>
+              <div class="grid-2" style="margin-top:8px;">
+                <select id="railLangInput">
+                  <option value="">All Languages</option>
+                  <option value="bn">Bangla (bn)</option>
+                  <option value="hi">Hindi (hi)</option>
+                  <option value="en">English (en)</option>
+                  <option value="ko">Korean (ko)</option>
+                  <option value="ta">Tamil (ta)</option>
+                  <option value="te">Telugu (te)</option>
+                </select>
+                <select id="railGenreInput">
+                  <option value="">All Genres</option>
+                  <option value="28">Action</option>
+                  <option value="53">Thriller</option>
+                  <option value="27">Horror</option>
+                  <option value="878">Sci-Fi</option>
+                  <option value="35">Comedy</option>
+                  <option value="10749">Romance</option>
+                  <option value="16">Animation</option>
+                </select>
+              </div>
+              <button class="btn btn-amber btn-sm" style="width:100%;margin-top:10px;" onclick="addCustomRail()">+ Create Discover Rail</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ====================================================
+         TAB 4: SUBTITLES (Providers + Gemini 3 AI Translation)
+         ==================================================== -->
+    <main id="tab-subtitles" class="tab-pane hidden">
+      <div class="panel-grid two-col">
+        <div class="hud-card">
+          <div class="card-header">
+            <div class="icon-badge cyan">💬</div>
+            <div class="card-title-wrap">
+              <div class="card-title">Subtitle Engines &amp; Gemini AI Translation</div>
+              <div class="card-desc">Toggle subtitle providers and choose any latest Gemini 3 / 3.1 / 2.5 model or type a custom model ID manually.</div>
+            </div>
+          </div>
+
+          <div id="subProvidersContainer"></div>
+
+          <div class="toggle-tile" style="margin-top:10px;" onclick="flipBool('subtitlesControl.enableBanglaAiTranslation')">
+            <div>
+              <div class="tile-title">🤖 1-Tap Gemini AI Bangla Translation</div>
+              <div class="tile-sub">Translate English subtitles into natural conversational Bangla in real time</div>
+            </div>
+            <div id="swAiBangla" class="switch"></div>
+          </div>
+
+          <div class="toggle-tile" onclick="flipBool('subtitlesControl.enableBilingualMode')">
+            <div>
+              <div class="tile-title">📚 Bilingual Dual-Subtitle Display</div>
+              <div class="tile-sub">Show Bangla + Original English lines simultaneously</div>
+            </div>
+            <div id="swBilingual" class="switch"></div>
+          </div>
+
+          <label style="margin-top:14px;">Gemini AI Model (1-Click Latest Presets or Type Any Custom Model ID)</label>
+          <div class="chip-wrap" style="margin-bottom:9px;">
+            <button type="button" class="preset-chip amber" onclick="setGeminiModel('gemini-3-flash-preview')">⚡ gemini-3-flash-preview</button>
+            <button type="button" class="preset-chip" onclick="setGeminiModel('gemini-3.1-pro-preview')">🧠 gemini-3.1-pro-preview</button>
+            <button type="button" class="preset-chip" onclick="setGeminiModel('gemini-3.1-flash-lite-preview')">🚀 gemini-3.1-flash-lite-preview</button>
+            <button type="button" class="preset-chip" onclick="setGeminiModel('gemini-2.5-flash')">✓ gemini-2.5-flash</button>
+            <button type="button" class="preset-chip" onclick="setGeminiModel('gemini-2.5-pro')">gemini-2.5-pro</button>
+          </div>
+          <input id="geminiModelSelect" placeholder="Type any Gemini model ID manually (e.g. gemini-3-flash-preview)..." oninput="cfg.subtitlesControl.geminiModel=this.value.trim();setDirty()" style="font-family:'JetBrains Mono',monospace;" />
+        </div>
+
+        <div class="hud-card">
+          <div class="card-header">
+            <div class="icon-badge violet">✨</div>
+            <div class="card-title-wrap">
+              <div class="card-title">Global Subtitle Typography &amp; Live Preview</div>
+              <div class="card-desc">Configure fresh-install subtitle size, color, background opacity, and Bangla bold weight.</div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label>Default Text Color</label>
+              <select id="subColorSelect" onchange="cfg.subtitlesControl.defaultTextColor=this.value;setDirty();updateSubPreview()">
+                <option value="#FFFFFF">Pure White (#FFFFFF)</option>
+                <option value="#FFD54F">Cinema Gold (#FFD54F)</option>
+                <option value="#4DD0E1">Cyber Cyan (#4DD0E1)</option>
+                <option value="#81C784">Emerald Soft (#81C784)</option>
+              </select>
             </div>
             <div>
-              <label>Badge (optional)</label>
-              <input id="custBadge" placeholder="e.g. Direct / Hindi" />
+              <label>Default Font Size (14 - 32 sp)</label>
+              <input id="subSizeInput" type="number" min="14" max="32" oninput="cfg.subtitlesControl.defaultFontSizeSp=Number(this.value||20);setDirty();updateSubPreview()" />
             </div>
           </div>
-          <button class="btn btn-glass btn-sm" style="margin-top:10px;width:100%;" onclick="addCustomProvider()">+ Add Custom Endpoint</button>
-          <div id="customList" style="margin-top:10px;"></div>
-        </div>
-      </div>
 
-      <!-- TAB 2: CATALOG -->
-      <div id="tab-catalog" class="tab-pane hidden">
-        <div class="card">
-          <div class="card-title"><span>Home Screen Rails & Region</span></div>
-          <p class="card-sub">Show or hide individual Home rows and switch OTT catalog region live.</p>
-          <label>TMDB Watch & OTT Region</label>
-          <select id="catalogRegion" onchange="cfg.catalog.region = this.value; renderJsonPreview()">
-            <option value="IN">IN — India (JioCinema, Hotstar, Prime, Netflix)</option>
-            <option value="BD">BD — Bangladesh</option>
-            <option value="US">US — United States</option>
-            <option value="GB">GB — United Kingdom</option>
-            <option value="AE">AE — UAE / Middle East</option>
-          </select>
-          <div id="catalogToggles" style="margin-top:8px;"></div>
-          <label>Pinned Hero TMDB IDs (comma separated, e.g. movie:550, tv:1399)</label>
-          <input id="pinnedHeroInput" placeholder="movie:550, tv:1399" oninput="updatePinnedHero()" />
-        </div>
+          <label>Background Box Opacity (0.0 - 1.0)</label>
+          <input id="subOpacityInput" type="number" min="0" max="1" step="0.05" oninput="cfg.subtitlesControl.defaultBgOpacity=Number(this.value||0.55);setDirty();updateSubPreview()" />
 
-        <div class="card">
-          <div class="card-title"><span>Special Curated Collection (Top Featured Row)</span></div>
-          <p class="card-sub">Push a custom Eid, Weekend, or Editor's Picks row to the top of Home.</p>
-          <div class="toggle-row">
-            <div><div class="toggle-title">Enable Curated Row</div></div>
-            <div id="swCurated" class="switch" onclick="toggleBool('catalog.curatedSection.enabled', this)"></div>
+          <div class="toggle-tile" style="margin-top:12px;" onclick="flipBool('subtitlesControl.defaultBoldBangla')">
+            <div><div class="tile-title">Bold Bangla Typography</div><div class="tile-sub">Crisp high-contrast rendering for Bengali script</div></div>
+            <div id="swBoldBangla" class="switch"></div>
           </div>
-          <label>Row Title</label>
-          <input id="curatedTitle" oninput="cfg.catalog.curatedSection.title = this.value; renderJsonPreview()" />
-          <label>Subtitle</label>
-          <input id="curatedSub" oninput="cfg.catalog.curatedSection.subtitle = this.value; renderJsonPreview()" />
-          <label>TMDB Items (e.g. movie:550, tv:94605)</label>
-          <input id="curatedItems" placeholder="movie:550, tv:94605" oninput="updateCuratedItems()" />
-        </div>
-      </div>
 
-      <!-- TAB 3: SUBTITLES & AI -->
-      <div id="tab-subs" class="tab-pane hidden">
-        <div class="card">
-          <div class="card-title"><span>Online Subtitle Scrapers Control</span></div>
-          <p class="card-sub">Turn off broken subtitle scrapers or control default Bangla loading.</p>
-          <div id="subToggles"></div>
-        </div>
-        <div class="card">
-          <div class="card-title"><span>AI Translation Engine</span></div>
-          <p class="card-sub">Switch the Gemini model used for AI Bangla subtitle translation across all users.</p>
-          <label>Active Gemini Model Alias</label>
-          <input id="geminiModelInput" oninput="cfg.subtitles.geminiModel = this.value.trim(); renderJsonPreview()" />
-          <div class="chips">
-            <span class="chip" onclick="setGeminiModel('gemini-2.5-flash')">gemini-2.5-flash</span>
-            <span class="chip" onclick="setGeminiModel('gemini-2.5-flash-lite')">gemini-2.5-flash-lite</span>
-            <span class="chip" onclick="setGeminiModel('gemini-2.5-pro')">gemini-2.5-pro</span>
+          <div style="margin-top:14px;padding:18px;border-radius:16px;background:linear-gradient(135deg,#090D18,#1E293B);border:1px solid rgba(255,255,255,0.1);text-align:center;">
+            <div style="font-size:10.5px;font-weight:800;color:#94A3B8;letter-spacing:0.8px;margin-bottom:8px;">LIVE PLAYER SUBTITLE HUD PREVIEW</div>
+            <span id="subLivePreview" style="display:inline-block;padding:5px 14px;border-radius:8px;font-weight:700;">Nothing can stop us from watching in 4K tonight.</span>
           </div>
         </div>
       </div>
+    </main>
 
-      <!-- TAB 4: NOTICES & OTA -->
-      <div id="tab-notices" class="tab-pane hidden">
-        <div class="card">
-          <div class="card-title"><span>Home Announcement Banner</span></div>
-          <p class="card-sub">Broadcast notices, server tips, or Telegram channel links on Home.</p>
-          <div class="toggle-row">
-            <div><div class="toggle-title">Show Announcement</div></div>
-            <div id="swAnnounce" class="switch" onclick="toggleBool('announcement.enabled', this)"></div>
-          </div>
-          <div class="toggle-row">
-            <div>
-              <div class="toggle-title">Allow User to Dismiss</div>
-              <div class="toggle-desc">Turn OFF to keep an important notice pinned until you disable it</div>
+    <!-- ====================================================
+         TAB 5: CONTROL (12 Glass Themes, OTA, Notices, Lock)
+         ==================================================== -->
+    <main id="tab-control" class="tab-pane hidden">
+      <div class="panel-grid two-col">
+        <div>
+          <!-- 12 LIQUID GLASS THEMES -->
+          <div class="hud-card">
+            <div class="card-header">
+              <div class="icon-badge">🎨</div>
+              <div class="card-title-wrap">
+                <div class="card-title">12 Liquid Glass Theme Presets &amp; Cloud Sync</div>
+                <div class="card-desc">Select the default accent theme for new installs and manage Google Cloud Sync.</div>
+              </div>
             </div>
-            <div id="swAnnDismiss" class="switch" onclick="toggleBool('announcement.dismissible', this)"></div>
+            <div id="themeGridContainer" class="swatch-grid"></div>
+            <div class="toggle-tile" style="margin-top:14px;" onclick="flipBool('appControl.enableCloudSync')">
+              <div>
+                <div class="tile-title">☁️ Firebase Cloud Sync (Google Sign-In)</div>
+                <div class="tile-sub">Sync Watchlist, Continue Watching, Theme &amp; User Addons</div>
+              </div>
+              <div id="swCloudSync" class="switch"></div>
+            </div>
           </div>
-          <label>Banner Type</label>
-          <select id="annType" onchange="cfg.announcement.type = this.value; renderJsonPreview()">
-            <option value="info">Info (Blue / Glass)</option>
-            <option value="promo">Highlight (Amber Gold)</option>
-            <option value="warning">Alert (Red)</option>
-          </select>
-          <label>Title (Bangla / English)</label>
-          <input id="annTitle" oninput="cfg.announcement.title = this.value; renderJsonPreview()" />
-          <label>Message</label>
-          <textarea id="annMsg" oninput="cfg.announcement.message = this.value; renderJsonPreview()"></textarea>
-          <div class="row-wrap">
-            <div><label>Button Label (optional)</label><input id="annBtnLabel" oninput="cfg.announcement.actionLabel = this.value; renderJsonPreview()" /></div>
-            <div><label>Action URL (optional)</label><input id="annBtnUrl" oninput="cfg.announcement.actionUrl = this.value; renderJsonPreview()" /></div>
+
+          <!-- ANNOUNCEMENT BANNER -->
+          <div class="hud-card">
+            <div class="card-header">
+              <div class="icon-badge cyan">📢</div>
+              <div class="card-title-wrap">
+                <div class="card-title">Live Home Announcement Banner</div>
+                <div class="card-desc">Broadcast domain updates, notices, or Telegram links at the top of the Home screen.</div>
+              </div>
+            </div>
+            <div class="toggle-tile" onclick="flipBool('appControl.announcement.enabled');updateBannerPreview()">
+              <div><div class="tile-title">Enable Announcement Banner</div></div>
+              <div id="swAnnounce" class="switch"></div>
+            </div>
+            <div class="grid-2">
+              <div><label>Banner Title</label><input id="annTitleInput" placeholder="e.g. New High-Speed Servers Live!" oninput="cfg.appControl.announcement.title=this.value;setDirty();updateBannerPreview()" /></div>
+              <div>
+                <label>Banner Style</label>
+                <select id="annTypeInput" onchange="cfg.appControl.announcement.type=this.value;setDirty();updateBannerPreview()">
+                  <option value="info">Cyber Cyan (Info)</option>
+                  <option value="promo">Royal Gold (Highlight)</option>
+                  <option value="warning">Crimson Rose (Alert)</option>
+                </select>
+              </div>
+            </div>
+            <label>Banner Message</label>
+            <textarea id="annMsgInput" placeholder="Write announcement message..." oninput="cfg.appControl.announcement.message=this.value;setDirty();updateBannerPreview()"></textarea>
+            <div class="grid-2">
+              <div><label>CTA Button Label</label><input id="annBtnInput" placeholder="Join Telegram" oninput="cfg.appControl.announcement.actionLabel=this.value;setDirty()" /></div>
+              <div><label>CTA Target URL</label><input id="annUrlInput" placeholder="https://t.me/..." oninput="cfg.appControl.announcement.actionUrl=this.value;setDirty()" /></div>
+            </div>
+            <div id="bannerPreviewBox" style="margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <strong id="bannerPrevTitle" style="font-size:13px;">Announcement Preview</strong>
+                <span id="bannerPrevBadge" class="hud-pill cyan">Hidden</span>
+              </div>
+              <div id="bannerPrevMsg" style="font-size:12px;color:#94A3B8;margin-top:4px;">Your live message will appear here...</div>
+            </div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-title"><span>In-App APK Update Popup (OTA)</span></div>
-          <p class="card-sub">Show an update dialog when you publish a newer APK release.</p>
-          <div class="toggle-row">
-            <div><div class="toggle-title">Enable Update Prompt</div></div>
-            <div id="swUpdate" class="switch" onclick="toggleBool('appUpdate.enabled', this)"></div>
+        <div>
+          <!-- OTA UPDATE MANAGER -->
+          <div class="hud-card">
+            <div class="card-header">
+              <div class="icon-badge emerald">📲</div>
+              <div class="card-title-wrap">
+                <div class="card-title">In-App OTA Update Manager</div>
+                <div class="card-desc">Auto-fetch latest APK release from `Tawhid5/Thivo` or configure version prompts manually.</div>
+              </div>
+              <button class="btn btn-cyan btn-sm" onclick="autoFetchGithubRelease()">⚡ Auto-Fetch Release</button>
+            </div>
+            <div class="toggle-tile" onclick="flipBool('ota.enabled')">
+              <div><div class="tile-title">Enable In-App Update Dialog</div></div>
+              <div id="swOta" class="switch"></div>
+            </div>
+            <div class="grid-2">
+              <div><label>Latest Version Code</label><input id="otaCodeInput" type="number" oninput="cfg.ota.latestVersionCode=Number(this.value||22);setDirty()" /></div>
+              <div><label>Latest Version Name</label><input id="otaNameInput" placeholder="2.0.2" oninput="cfg.ota.latestVersionName=this.value;setDirty()" /></div>
+            </div>
+            <label>Direct APK Download URL</label>
+            <input id="otaUrlInput" placeholder="https://github.com/Tawhid5/Thivo/releases/download/..." oninput="cfg.ota.apkDownloadUrl=this.value;setDirty()" />
+            <label>Release Notes / Changelog</label>
+            <textarea id="otaNotesInput" placeholder="• Upgraded v20 Command Center&#10;• Auto-sync remote addon deletion" oninput="cfg.ota.changelog=this.value;setDirty()"></textarea>
+            <div class="toggle-tile" style="margin-top:10px;" onclick="flipBool('ota.forceUpdate')">
+              <div><div class="tile-title">Force Update (Non-dismissible)</div></div>
+              <div id="swForceOta" class="switch"></div>
+            </div>
           </div>
-          <div class="row-wrap">
-            <div><label>Latest Version Code (Int)</label><input id="updCode" type="number" oninput="cfg.appUpdate.latestVersionCode = Number(this.value || 1); renderJsonPreview()" /></div>
-            <div><label>Min Supported Version Code (0 = off)</label><input id="updMinCode" type="number" min="0" oninput="cfg.appUpdate.minSupportedVersionCode = Math.max(0, Number(this.value || 0)); renderJsonPreview()" /></div>
-            <div><label>Version Name (e.g. 1.2)</label><input id="updName" oninput="cfg.appUpdate.latestVersionName = this.value; renderJsonPreview()" /></div>
-          </div>
-          <label>Direct APK Download URL</label>
-          <input id="updUrl" placeholder="https://github.com/Tawhid5/Thivo/releases/..." oninput="cfg.appUpdate.apkUrl = this.value; renderJsonPreview()" />
-          <label>What's New / Changelog</label>
-          <textarea id="updNotes" oninput="cfg.appUpdate.changelog = this.value; renderJsonPreview()"></textarea>
-          <div class="toggle-row">
-            <div><div class="toggle-title">Force Update (Block older APKs)</div></div>
-            <div id="swForceUpd" class="switch" onclick="toggleBool('appUpdate.forceUpdate', this)"></div>
-          </div>
-        </div>
 
-        <div class="card">
-          <div class="card-title"><span>Maintenance Lock (Emergency Mode)</span></div>
-          <div class="toggle-row">
-            <div><div class="toggle-title">Enable Maintenance Screen</div></div>
-            <div id="swMaint" class="switch" onclick="toggleBool('maintenance.enabled', this)"></div>
+          <!-- EMERGENCY MAINTENANCE LOCK -->
+          <div class="hud-card">
+            <div class="card-header">
+              <div class="icon-badge rose">🚨</div>
+              <div class="card-title-wrap">
+                <div class="card-title">Emergency Maintenance Shield</div>
+                <div class="card-desc">Display a full-screen maintenance lock inside the app during major server upgrades.</div>
+              </div>
+            </div>
+            <div class="toggle-tile" onclick="flipBool('appControl.maintenanceMode')">
+              <div><div class="tile-title">Activate Maintenance Lock Screen</div></div>
+              <div id="swMaint" class="switch"></div>
+            </div>
+            <label>Maintenance Screen Message</label>
+            <input id="maintMsgInput" placeholder="THIVO is upgrading streaming resolvers. We will be back shortly." oninput="cfg.appControl.maintenanceMessage=this.value;setDirty()" />
           </div>
-          <label>Title</label><input id="maintTitle" oninput="cfg.maintenance.title = this.value; renderJsonPreview()" />
-          <label>Message</label><textarea id="maintMsg" oninput="cfg.maintenance.message = this.value; renderJsonPreview()"></textarea>
-          <label>Support / Telegram URL (optional)</label>
-          <input id="maintSupport" placeholder="https://t.me/..." oninput="cfg.maintenance.supportUrl = this.value; renderJsonPreview()" />
         </div>
       </div>
+    </main>
 
-      <!-- TAB 5: JSON -->
-      <div id="tab-json" class="tab-pane hidden">
-        <div class="card">
-          <div class="card-title"><span>Live config.json Preview</span></div>
-          <p class="card-sub">Schema: v<span id="schemaLabel">1</span> • SHA: <span id="shaLabel">-</span></p>
-          <div class="row" style="margin-bottom:10px;">
-            <button class="btn btn-glass btn-sm" onclick="copyJson()">Copy JSON</button>
-            <button class="btn btn-glass btn-sm" onclick="downloadJson()">Download Backup</button>
+    <!-- ====================================================
+         TAB 6: JSON (Live Inspector, Backup & Export)
+         ==================================================== -->
+    <main id="tab-json" class="tab-pane hidden">
+      <div class="hud-card">
+        <div class="card-header">
+          <div class="icon-badge">{ }</div>
+          <div class="card-title-wrap">
+            <div class="card-title">Live v20 `config.json` Inspector &amp; Export Deck</div>
+            <div class="card-desc">Inspect the complete generated JSON payload, download backups, or copy the full `index.html` code.</div>
           </div>
-          <pre id="jsonPreview"></pre>
         </div>
+        <div class="chip-wrap" style="margin-bottom:14px;">
+          <button class="btn btn-amber btn-sm" onclick="copyConfigJson()">📋 Copy config.json</button>
+          <button class="btn btn-cyan btn-sm" onclick="downloadConfigJson()">⬇ Download config.json</button>
+          <button class="btn btn-emerald btn-sm" onclick="copyThisHtmlCode()">📋 Copy Full index.html</button>
+          <button class="btn btn-danger btn-sm" onclick="resetAllToDefault()">↺ Reset v20 Defaults</button>
+        </div>
+        <pre id="jsonBox" style="background:#04060C;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#93C5FD;max-height:460px;overflow:auto;line-height:1.55;"></pre>
       </div>
-    </section>
-  </main>
+    </main>
+  </div>
 
-  <nav id="bottomNav" class="bottom-nav hidden">
-    <button class="nav-btn active" onclick="switchTab('sources', this)">Sources</button>
-    <button class="nav-btn" onclick="switchTab('catalog', this)">Catalog</button>
-    <button class="nav-btn" onclick="switchTab('subs', this)">Subtitles</button>
-    <button class="nav-btn" onclick="switchTab('notices', this)">Notices</button>
-    <button class="nav-btn" onclick="switchTab('json', this)">JSON</button>
+  <!-- FLOATING 6-TAB GAME-ENGINE BOTTOM DOCK -->
+  <nav class="bottom-dock-wrap" aria-label="Command Center Navigation">
+    <div class="bottom-dock">
+      <button class="dock-tab active" id="tbtn-sources" onclick="openTab('sources')">
+        <span class="d-icon">🎬</span>
+        <span class="d-label">Sources</span>
+      </button>
+      <button class="dock-tab" id="tbtn-player" onclick="openTab('player')">
+        <span class="d-icon">⚡</span>
+        <span class="d-label">Player</span>
+      </button>
+      <button class="dock-tab" id="tbtn-catalog" onclick="openTab('catalog')">
+        <span class="d-icon">🏠</span>
+        <span class="d-label">Catalog</span>
+      </button>
+      <button class="dock-tab" id="tbtn-subtitles" onclick="openTab('subtitles')">
+        <span class="d-icon">💬</span>
+        <span class="d-label">Subtitles</span>
+      </button>
+      <button class="dock-tab" id="tbtn-control" onclick="openTab('control')">
+        <span class="d-icon">🎨</span>
+        <span class="d-label">Control</span>
+      </button>
+      <button class="dock-tab" id="tbtn-json" onclick="openTab('json')">
+        <span class="d-icon">{ }</span>
+        <span class="d-label">JSON</span>
+      </button>
+    </div>
   </nav>
 
   <script>
+    const TMDB_KEY = '73d5ec2522f262d3ff4d722aa7a11a90';
+    const THEMES = [
+      ['ROYAL_GOLD', 'Royal Gold', '#F59E0B'],
+      ['CRIMSON_VELVET', 'Crimson Velvet', '#F43F5E'],
+      ['CYBER_CYAN', 'Cyber Cyan', '#06B6D4'],
+      ['EMERALD_LUXE', 'Emerald Luxe', '#10B981'],
+      ['ROYAL_AMETHYST', 'Royal Amethyst', '#8B5CF6'],
+      ['ROSE_QUARTZ', 'Rose Quartz', '#EC4899'],
+      ['SAPPHIRE_COBALT', 'Sapphire Blue', '#3B82F6'],
+      ['SUNSET_COPPER', 'Sunset Copper', '#F97316'],
+      ['NEON_MAGENTA', 'Neon Magenta', '#D946EF'],
+      ['ARCTIC_MINT', 'Arctic Mint', '#14B8A6'],
+      ['CHAMPAGNE_LUXE', 'Champagne Gold', '#EAB308'],
+      ['TITANIUM_SILVER', 'Titanium Silver', '#94A3B8']
+    ];
+    const DEFAULT_SITES = [
+      { id: 'rogmovies', name: 'RogMovies', baseUrl: 'https://rogmovies.cyou/', enabled: true, priority: 1, tag: 'Dual Audio / Hindi' },
+      { id: 'vegamovies', name: 'VegaMovies', baseUrl: 'https://vegamovies.lease/', enabled: true, priority: 2, tag: '4K / 1080p / Dual' },
+      { id: 'hdhub4u', name: 'HDHub4u', baseUrl: 'https://new15.hdhub4u.cl/', enabled: true, priority: 3, tag: 'Bollywood / South' },
+      { id: 'movielinkbd', name: 'MovieLinkBD', baseUrl: 'https://x7ykrg.movielinkbd.at/', enabled: true, priority: 4, tag: 'Bangla / Dual' }
+    ];
+
     let auth = { owner: 'Tawhid5', repo: 'thivo-config', branch: 'main', token: '' };
     let currentSha = '';
     let cfg = {};
 
+    function sGet(k) { try { return window.localStorage ? localStorage.getItem(k) : null; } catch (e) { return null; } }
+    function sSet(k, v) { try { if (window.localStorage) localStorage.setItem(k, v); } catch (e) {} }
+    function sDel(k) { try { if (window.localStorage) localStorage.removeItem(k); } catch (e) {} }
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    function toBase64Utf8(str) {
+
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.display = 'block';
+      clearTimeout(window._tm);
+      window._tm = setTimeout(() => { t.style.display = 'none'; }, 3000);
+    }
+
+    function openTab(name) {
+      ['sources','player','catalog','subtitles','control','json'].forEach(id => {
+        document.getElementById('tab-' + id).classList.toggle('hidden', id !== name);
+        document.getElementById('tbtn-' + id).classList.toggle('active', id === name);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleGithubBox(force) {
+      const box = document.getElementById('githubBox');
+      const show = typeof force === 'boolean' ? force : box.classList.contains('hidden');
+      box.classList.toggle('hidden', !show);
+    }
+
+    function ensureSchema() {
+      cfg.schemaVersion = 20;
+      cfg.updatedAt = cfg.updatedAt || new Date().toISOString();
+      if (!Array.isArray(cfg.directSites) || !cfg.directSites.length) {
+        cfg.directSites = JSON.parse(JSON.stringify(DEFAULT_SITES));
+      }
+      if (!Array.isArray(cfg.recommendedAddons)) {
+        cfg.recommendedAddons = [];
+      }
+      cfg.defaultProviderId = cfg.defaultProviderId || (cfg.directSites[0]?.id || 'rogmovies');
+
+      cfg.playbackPolicy = Object.assign({
+        defaultPreferredQuality: '1080p', smartTimeoutEnabled: true,
+        deadMirrorCutoffMs: 4500, maxSlowBufferGraceMs: 20000, maxConcurrentStreamRequests: 4,
+        enableOfflineDownloads: true, maxConcurrentDownloads: 2, downloadChunksPerFile: 4,
+        enableTrailers: true, enableMiniPlayer: true
+      }, cfg.playbackPolicy || {});
+
+      cfg.catalogControl = Object.assign({
+        region: 'BD', enableHeroBanner: true, heroAutoRotateSec: 7,
+        enableCinemetaCharts: true, enableCommunityLists: true,
+        pinnedHeroItems: [], blockedTmdbIds: [], blockedKeywords: [],
+        pinnedCommunityLists: [], curatedRails: [],
+        curatedSection: { enabled: false, title: "Editor's Picks", subtitle: "Handpicked for you", items: [] }
+      }, cfg.catalogControl || {});
+      cfg.catalogControl.curatedSection = Object.assign({
+        enabled: false, title: "Editor's Picks", subtitle: "Handpicked for you", items: []
+      }, cfg.catalogControl.curatedSection || {});
+
+      cfg.subtitlesControl = Object.assign({
+        enableSubtitles: true, enableBanglaAiTranslation: true, enableBilingualMode: true,
+        geminiModel: 'gemini-3-flash-preview', defaultFontSizeSp: 20, defaultTextColor: '#FFFFFF',
+        defaultBgOpacity: 0.55, defaultOutline: true, defaultBoldBangla: true,
+        providers: {
+          opensubtitles: { enabled: true, priority: 1 },
+          subtitlecat: { enabled: true, priority: 2 },
+          subdl: { enabled: true, priority: 3 },
+          subsource: { enabled: true, priority: 4 }
+        }
+      }, cfg.subtitlesControl || {});
+
+      cfg.appControl = Object.assign({
+        enableCloudSync: true, defaultAccentColor: 'ROYAL_GOLD',
+        maintenanceMode: false, maintenanceTitle: 'Scheduled Upgrade in Progress',
+        maintenanceMessage: 'THIVO is upgrading streaming resolvers. We will be back shortly.',
+        announcement: { id: 'notice_v20', enabled: false, type: 'info', title: '', message: '', actionLabel: '', actionUrl: '', dismissible: true }
+      }, cfg.appControl || {});
+      cfg.appControl.announcement = Object.assign({
+        id: 'notice_v20', enabled: false, type: 'info', title: '', message: '', actionLabel: '', actionUrl: '', dismissible: true
+      }, cfg.appControl.announcement || {});
+
+      cfg.ota = Object.assign({
+        enabled: false, latestVersionCode: 22, minSupportedVersionCode: 0,
+        latestVersionName: '2.0.2', apkDownloadUrl: '', changelog: '', forceUpdate: false
+      }, cfg.ota || {});
+    }
+
+    function getPath(path) { return path.split('.').reduce((o, k) => o?.[k], cfg); }
+    function setPath(path, val) {
+      const p = path.split('.');
+      let o = cfg;
+      for (let i = 0; i < p.length - 1; i++) { o[p[i]] = o[p[i]] || {}; o = o[p[i]]; }
+      o[p[p.length - 1]] = val;
+    }
+
+    function flipBool(path) {
+      setPath(path, !Boolean(getPath(path)));
+      renderUI();
+      setDirty(true);
+    }
+
+    function setDirty(d = true) {
+      document.getElementById('dirtyBadge').classList.toggle('hidden', !d);
+      updateTelemetryAndJson();
+    }
+
+    /* --- TAB 1: DIRECT SITES & STREMIO ADDONS --- */
+    function renderSitesAndAddons() {
+      cfg.directSites.sort((a, b) => (a.priority || 99) - (b.priority || 99));
+      document.getElementById('directCountLabel').textContent = cfg.directSites.length;
+
+      const allEngines = [
+        ...cfg.directSites.filter(s => s.enabled !== false).map(s => ({ id: s.id, label: `🎬 ${s.name} (Direct Site)` })),
+        ...cfg.recommendedAddons.filter(a => a.enabled !== false).map(a => ({ id: a.id, label: `🧩 ${a.name} (Stremio Addon)` }))
+      ];
+      const sel = document.getElementById('defaultProviderSelect');
+      sel.innerHTML = allEngines.map(e => `<option value="${esc(e.id)}" ${cfg.defaultProviderId === e.id ? 'selected' : ''}>${esc(e.label)}</option>`).join('');
+
+      document.getElementById('directSitesContainer').innerHTML = cfg.directSites.map((s, i) => `
+        <div class="engine-card ${s.enabled !== false ? '' : 'disabled'}">
+          <div class="engine-top">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span class="rank-badge">#${i + 1}</span>
+              <strong style="font-size:14.5px;color:#FFF;">${esc(s.name)}</strong>
+              <span class="hud-pill emerald">${esc(s.tag || 'Direct')}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <button class="btn btn-sm" title="Move Priority Up" onclick="moveSite(${i},-1)">↑</button>
+              <button class="btn btn-sm" title="Move Priority Down" onclick="moveSite(${i},1)">↓</button>
+              <div class="switch ${s.enabled !== false ? 'on' : ''}" onclick="cfg.directSites[${i}].enabled=!(cfg.directSites[${i}].enabled!==false);renderSitesAndAddons();setDirty()"></div>
+              <button class="btn btn-danger btn-sm" title="Remove Site" onclick="cfg.directSites.splice(${i},1);renderSitesAndAddons();setDirty()">✕</button>
+            </div>
+          </div>
+          <div class="input-row" style="margin-top:10px;">
+            <input value="${esc(s.baseUrl)}" placeholder="https://..." oninput="updateSiteDomain(${i},this.value)" style="font-family:'JetBrains Mono',monospace;font-size:12.5px;" />
+            <a href="${esc(s.baseUrl)}" target="_blank" rel="noopener" class="btn btn-cyan btn-sm" style="text-decoration:none;">🔗 Open</a>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('addonCountLabel').textContent = cfg.recommendedAddons.length;
+      if (!cfg.recommendedAddons.length) {
+        document.getElementById('addonsContainer').innerHTML = `
+          <div style="padding:16px;border:1px dashed rgba(255,255,255,0.12);border-radius:15px;text-align:center;color:#94A3B8;font-size:12.5px;">
+            No default Stremio addons forced. Click any 1-Click Preset above or paste a custom <code style="color:#38BDF8;">manifest.json</code> URL below to push an addon to the app.
+          </div>
+        `;
+      } else {
+        document.getElementById('addonsContainer').innerHTML = cfg.recommendedAddons.map((a, i) => `
+          <div class="engine-card ${a.enabled !== false ? '' : 'disabled'}">
+            <div class="engine-top">
+              <div style="min-width:0;flex:1;">
+                <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+                  <strong style="font-size:14px;color:#FFF;">${esc(a.name)}</strong>
+                  <span class="hud-pill cyan">${esc(a.tag || 'Stremio')}</span>
+                  ${a.isDefault ? '<span class="hud-pill emerald">Auto-Sync</span>' : ''}
+                </div>
+                <div style="font-size:11.5px;color:#94A3B8;font-family:'JetBrains Mono',monospace;word-break:break-all;margin-top:5px;">${esc(a.manifestUrl)}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="switch ${a.enabled !== false ? 'on' : ''}" onclick="cfg.recommendedAddons[${i}].enabled=!(cfg.recommendedAddons[${i}].enabled!==false);renderSitesAndAddons();setDirty()"></div>
+                <button class="btn btn-danger btn-sm" title="Delete Addon from App" onclick="deleteRemoteAddon(${i})">✕</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function deleteRemoteAddon(idx) {
+      const removed = cfg.recommendedAddons[idx];
+      cfg.recommendedAddons.splice(idx, 1);
+      renderSitesAndAddons();
+      setDirty(true);
+      toast(`Removed "${removed?.name || 'Addon'}" • Click Publish Live to remove from App`);
+    }
+
+    function updateSiteDomain(i, val) {
+      let url = val.trim();
+      if (url && !url.endsWith('/')) url += '/';
+      cfg.directSites[i].baseUrl = url;
+      setDirty();
+    }
+
+    function moveSite(i, dir) {
+      const t = i + dir;
+      if (t < 0 || t >= cfg.directSites.length) return;
+      const tmp = cfg.directSites[i];
+      cfg.directSites[i] = cfg.directSites[t];
+      cfg.directSites[t] = tmp;
+      cfg.directSites.forEach((s, idx) => s.priority = idx + 1);
+      renderSitesAndAddons(); setDirty();
+    }
+
+    function addNewDirectSite() {
+      const name = document.getElementById('newSiteName').value.trim();
+      const tag = document.getElementById('newSiteTag').value.trim() || 'Direct HTTP';
+      let baseUrl = document.getElementById('newSiteUrl').value.trim();
+      if (!name || !baseUrl.startsWith('http')) return toast('Enter a site name and valid https:// mirror URL');
+      if (!baseUrl.endsWith('/')) baseUrl += '/';
+      const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '');
+      cfg.directSites.push({ id, name, baseUrl, tag, enabled: true, priority: cfg.directSites.length + 1 });
+      document.getElementById('newSiteName').value = '';
+      document.getElementById('newSiteTag').value = '';
+      document.getElementById('newSiteUrl').value = '';
+      renderSitesAndAddons(); setDirty(); toast(`Added ${name} ✓`);
+    }
+
+    function resetDefaultSites() {
+      cfg.directSites = JSON.parse(JSON.stringify(DEFAULT_SITES));
+      renderSitesAndAddons(); setDirty(); toast('Restored 4 default Direct Movie Sites ✓');
+    }
+
+    function quickAddAddon(name, manifestUrl, tag) {
+      if (cfg.recommendedAddons.some(a => a.manifestUrl === manifestUrl)) return toast(`${name} is already in the list`);
+      cfg.recommendedAddons.push({
+        id: 'remote_addon_' + name.toLowerCase().replace(/[^a-z0-9]+/g, '_'),
+        name, manifestUrl, description: name + ' Stremio Addon', tag,
+        enabled: true, isDefault: true, forceUpdateUrl: true, priority: cfg.recommendedAddons.length + 1
+      });
+      renderSitesAndAddons(); setDirty(); toast(`Added ${name} ✓`);
+    }
+
+    function addCustomAddon() {
+      const name = document.getElementById('newAddonName').value.trim();
+      const tag = document.getElementById('newAddonTag').value.trim() || 'Stremio';
+      let url = document.getElementById('newAddonUrl').value.trim().replace(/^stremio:\/\//i, 'https://');
+      if (!name || !url.startsWith('http')) return toast('Enter addon name and valid manifest.json URL');
+      if (!url.endsWith('/manifest.json')) url = url.replace(/\/$/, '') + '/manifest.json';
+      quickAddAddon(name, url, tag);
+      document.getElementById('newAddonName').value = '';
+      document.getElementById('newAddonTag').value = '';
+      document.getElementById('newAddonUrl').value = '';
+    }
+
+    /* --- TAB 2: PLAYER --- */
+    function applySpeedPreset(deadMs, slowMs, reqs, label) {
+      cfg.playbackPolicy.smartTimeoutEnabled = true;
+      cfg.playbackPolicy.deadMirrorCutoffMs = deadMs;
+      cfg.playbackPolicy.maxSlowBufferGraceMs = slowMs;
+      cfg.playbackPolicy.maxConcurrentStreamRequests = reqs;
+      renderPlayer(); setDirty(); toast(`Applied ${label} ⚡`);
+    }
+
+    function renderPlayer() {
+      const p = cfg.playbackPolicy;
+      document.getElementById('prefQualityInput').value = p.defaultPreferredQuality || '1080p';
+      document.getElementById('swSmartTimeout').classList.toggle('on', Boolean(p.smartTimeoutEnabled));
+      document.getElementById('deadMirrorInput').value = p.deadMirrorCutoffMs ?? 4500;
+      document.getElementById('slowBufferInput').value = p.maxSlowBufferGraceMs ?? 20000;
+      document.getElementById('maxStreamReqInput').value = String(p.maxConcurrentStreamRequests ?? 4);
+      document.getElementById('swDownloads').classList.toggle('on', Boolean(p.enableOfflineDownloads));
+      document.getElementById('dlChunksInput').value = String(p.downloadChunksPerFile ?? 4);
+      document.getElementById('maxDlInput').value = String(p.maxConcurrentDownloads ?? 2);
+      document.getElementById('swTrailers').classList.toggle('on', Boolean(p.enableTrailers));
+      document.getElementById('swMiniPlayer').classList.toggle('on', Boolean(p.enableMiniPlayer));
+    }
+
+    /* --- TAB 3: CATALOG & TMDB --- */
+    async function searchTmdb() {
+      const q = document.getElementById('tmdbQuery').value.trim();
+      const box = document.getElementById('tmdbResults');
+      if (!q) return toast('Type a movie or series title to search');
+      box.innerHTML = '<div style="font-size:12px;color:#94A3B8;padding:8px;">Searching TMDB live database...</div>';
+      try {
+        const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_KEY}&query=${encodeURIComponent(q)}&include_adult=false`);
+        const data = await res.json();
+        const items = (data.results || []).filter(r => r.media_type === 'movie' || r.media_type === 'tv').slice(0, 5);
+        if (!items.length) { box.innerHTML = '<div style="font-size:12px;color:#94A3B8;padding:8px;">No matching titles found.</div>'; return; }
+        box.innerHTML = items.map(it => {
+          const title = it.title || it.name || 'Untitled';
+          const year = (it.release_date || it.first_air_date || '').slice(0, 4);
+          const tag = `${it.media_type}:${it.id}`;
+          const img = it.poster_path ? `https://image.tmdb.org/t/p/w92${it.poster_path}` : '';
+          return `
+            <div class="tmdb-item">
+              <div class="tmdb-meta">
+                ${img ? `<img class="tmdb-thumb" src="${img}" alt="" />` : `<div class="tmdb-thumb"></div>`}
+                <div style="min-width:0;">
+                  <div style="font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(title)}</div>
+                  <div style="font-size:11px;color:#94A3B8;">${it.media_type.toUpperCase()} • ${esc(year)} • TMDB #${it.id}</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-amber btn-sm" onclick="pinHero('${tag}')">⭐ Pin Hero</button>
+                <button class="btn btn-danger btn-sm" onclick="blockId(${it.id})">🚫 Block</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        box.innerHTML = `<div style="font-size:12px;color:#FDA4AF;">TMDB Search error: ${esc(e.message)}</div>`;
+      }
+    }
+
+    function pinHero(tag) {
+      const list = cfg.catalogControl.pinnedHeroItems || [];
+      if (!list.includes(tag)) list.push(tag);
+      cfg.catalogControl.pinnedHeroItems = list;
+      renderCatalog(); setDirty(); toast('Pinned to Hero Spotlight ⭐');
+    }
+
+    function blockId(id) {
+      const list = cfg.catalogControl.blockedTmdbIds || [];
+      if (!list.includes(id)) list.push(id);
+      cfg.catalogControl.blockedTmdbIds = list;
+      renderCatalog(); setDirty(); toast('Blocked TMDB #' + id);
+    }
+
+    function quickAddCommList(listId, title, badge) {
+      cfg.catalogControl.pinnedCommunityLists = cfg.catalogControl.pinnedCommunityLists || [];
+      if (cfg.catalogControl.pinnedCommunityLists.some(l => String(l.listId) === String(listId))) {
+        return toast('TMDB List #' + listId + ' is already pinned');
+      }
+      cfg.catalogControl.pinnedCommunityLists.push({ listId: String(listId), title, badge, enabled: true });
+      renderCatalog(); setDirty(); toast(`Pinned "${title}" ✓`);
+    }
+
+    function addCustomCommList() {
+      const listId = document.getElementById('newListId').value.trim();
+      const title = document.getElementById('newListTitle').value.trim();
+      const badge = document.getElementById('newListBadge').value.trim() || 'Featured';
+      if (!listId || !title) return toast('Enter both TMDB List ID and Title');
+      quickAddCommList(listId, title, badge);
+      document.getElementById('newListId').value = '';
+      document.getElementById('newListTitle').value = '';
+      document.getElementById('newListBadge').value = '';
+    }
+
+    function quickAddRail(title, mediaType, language, genreStr) {
+      const genreIds = genreStr ? genreStr.split(',').map(Number).filter(Boolean) : [];
+      cfg.catalogControl.curatedRails = cfg.catalogControl.curatedRails || [];
+      cfg.catalogControl.curatedRails.push({
+        id: 'rail_' + Date.now(), title, mediaType, language, genreIds,
+        minYear: 2020, sortBy: 'popularity.desc', enabled: true, order: cfg.catalogControl.curatedRails.length + 1
+      });
+      renderCatalog(); setDirty(); toast(`Added "${title}" rail ✓`);
+    }
+
+    function addCustomRail() {
+      const title = document.getElementById('railTitleInput').value.trim();
+      if (!title) return toast('Enter a title for the Discover rail');
+      quickAddRail(title, document.getElementById('railTypeInput').value, document.getElementById('railLangInput').value, document.getElementById('railGenreInput').value);
+      document.getElementById('railTitleInput').value = '';
+    }
+
+    function renderCatalog() {
+      const c = cfg.catalogControl;
+      document.getElementById('catalogRegionInput').value = c.region || 'BD';
+      document.getElementById('swHero').classList.toggle('on', Boolean(c.enableHeroBanner));
+      document.getElementById('swCharts').classList.toggle('on', Boolean(c.enableCinemetaCharts));
+      document.getElementById('swComm').classList.toggle('on', Boolean(c.enableCommunityLists));
+      document.getElementById('heroSecInput').value = c.heroAutoRotateSec ?? 7;
+      document.getElementById('blockedKwInput').value = (c.blockedKeywords || []).join(', ');
+
+      const pins = c.pinnedHeroItems || [];
+      document.getElementById('heroPinCount').textContent = pins.length;
+      document.getElementById('heroPinnedChips').innerHTML = pins.length
+        ? pins.map((p, i) => `<span class="tag-chip">${esc(p)} <button onclick="cfg.catalogControl.pinnedHeroItems.splice(${i},1);renderCatalog();setDirty()">✕</button></span>`).join('')
+        : '<span style="font-size:12px;color:#64748B;">No manual pins (auto-showing trending spotlight)</span>';
+
+      const blocks = c.blockedTmdbIds || [];
+      document.getElementById('blockedIdCount').textContent = blocks.length;
+      document.getElementById('blockedIdChips').innerHTML = blocks.length
+        ? blocks.map((id, i) => `<span class="tag-chip">#${id} <button onclick="cfg.catalogControl.blockedTmdbIds.splice(${i},1);renderCatalog();setDirty()">✕</button></span>`).join('')
+        : '<span style="font-size:12px;color:#64748B;">No blocked TMDB IDs</span>';
+
+      const lists = c.pinnedCommunityLists || [];
+      document.getElementById('commListsContainer').innerHTML = lists.length
+        ? lists.map((l, i) => `
+          <div class="engine-card ${l.enabled !== false ? '' : 'disabled'}">
+            <div class="engine-top">
+              <div>
+                <strong style="font-size:13.5px;">${esc(l.title)}</strong>
+                <span class="hud-pill violet">TMDB #${esc(l.listId)}</span>
+                ${l.badge ? `<span class="hud-pill amber">${esc(l.badge)}</span>` : ''}
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="switch ${l.enabled !== false ? 'on' : ''}" onclick="cfg.catalogControl.pinnedCommunityLists[${i}].enabled=!(cfg.catalogControl.pinnedCommunityLists[${i}].enabled!==false);renderCatalog();setDirty()"></div>
+                <button class="btn btn-danger btn-sm" onclick="cfg.catalogControl.pinnedCommunityLists.splice(${i},1);renderCatalog();setDirty()">✕</button>
+              </div>
+            </div>
+          </div>
+        `).join('')
+        : '<div style="font-size:12px;color:#64748B;padding:6px 0;">No pinned TMDB community lists yet. Click a preset above to feature one.</div>';
+
+      const rails = c.curatedRails || [];
+      document.getElementById('customRailsContainer').innerHTML = rails.length
+        ? rails.map((r, i) => `
+          <div class="engine-card ${r.enabled !== false ? '' : 'disabled'}">
+            <div class="engine-top">
+              <div>
+                <strong style="font-size:13.5px;">${esc(r.title)}</strong>
+                <span class="hud-pill cyan">${esc(r.mediaType)}</span>
+                ${r.language ? `<span class="hud-pill amber">${esc(r.language)}</span>` : ''}
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="switch ${r.enabled !== false ? 'on' : ''}" onclick="cfg.catalogControl.curatedRails[${i}].enabled=!(cfg.catalogControl.curatedRails[${i}].enabled!==false);renderCatalog();setDirty()"></div>
+                <button class="btn btn-danger btn-sm" onclick="cfg.catalogControl.curatedRails.splice(${i},1);renderCatalog();setDirty()">✕</button>
+              </div>
+            </div>
+          </div>
+        `).join('')
+        : '<div style="font-size:12px;color:#64748B;padding:6px 0;">No custom Discover rails yet. Use the 1-click presets above to add rows.</div>';
+    }
+
+    /* --- TAB 4: SUBTITLES & GEMINI AI --- */
+    function renderSubtitles() {
+      const s = cfg.subtitlesControl;
+      const pMeta = [
+        ['opensubtitles', 'OpenSubtitles REST (Global Multi-Language)'],
+        ['subtitlecat', 'SubtitleCat (Bangla & Asian Catalog)'],
+        ['subdl', 'SubDL Direct Mirror'],
+        ['subsource', 'SubSource Synced SRT']
+      ];
+      document.getElementById('subProvidersContainer').innerHTML = pMeta.map(([k, label]) => {
+        const on = s.providers?.[k]?.enabled !== false;
+        return `
+          <div class="toggle-tile" onclick="cfg.subtitlesControl.providers['${k}'].enabled=!cfg.subtitlesControl.providers['${k}'].enabled;renderSubtitles();setDirty()">
+            <div><div class="tile-title">${esc(label)}</div></div>
+            <div class="switch ${on ? 'on' : ''}"></div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('swAiBangla').classList.toggle('on', Boolean(s.enableBanglaAiTranslation));
+      document.getElementById('swBilingual').classList.toggle('on', Boolean(s.enableBilingualMode));
+      document.getElementById('geminiModelSelect').value = s.geminiModel || 'gemini-3-flash-preview';
+      document.getElementById('subColorSelect').value = s.defaultTextColor || '#FFFFFF';
+      document.getElementById('subSizeInput').value = s.defaultFontSizeSp ?? 20;
+      document.getElementById('subOpacityInput').value = s.defaultBgOpacity ?? 0.55;
+      document.getElementById('swBoldBangla').classList.toggle('on', Boolean(s.defaultBoldBangla));
+      updateSubPreview();
+    }
+
+    function setGeminiModel(m) {
+      cfg.subtitlesControl.geminiModel = m;
+      document.getElementById('geminiModelSelect').value = m;
+      setDirty();
+      toast('Active Gemini AI Model: ' + m);
+    }
+
+    function updateSubPreview() {
+      const s = cfg.subtitlesControl;
+      const el = document.getElementById('subLivePreview');
+      el.style.color = s.defaultTextColor || '#FFFFFF';
+      el.style.fontSize = Math.min(26, Math.max(13, Number(s.defaultFontSizeSp || 20) * 0.85)) + 'px';
+      el.style.background = `rgba(0,0,0,${s.defaultBgOpacity ?? 0.55})`;
+      el.style.textShadow = '0 2px 4px rgba(0,0,0,0.95)';
+    }
+
+    /* --- TAB 5: CONTROL (THEME, NOTICES, OTA, MAINTENANCE) --- */
+    function renderControl() {
+      const activeTheme = cfg.appControl.defaultAccentColor || 'ROYAL_GOLD';
+      document.getElementById('themeGridContainer').innerHTML = THEMES.map(([id, name, hex]) => `
+        <div class="swatch-item ${activeTheme === id ? 'active' : ''}" onclick="cfg.appControl.defaultAccentColor='${id}';renderControl();setDirty();toast('Theme set to ${name} 🎨')">
+          <span class="swatch-orb" style="background:${hex};box-shadow:0 0 12px ${hex};"></span>
+          <span style="font-size:12.5px;font-weight:800;">${esc(name)}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('swCloudSync').classList.toggle('on', Boolean(cfg.appControl.enableCloudSync));
+
+      const a = cfg.appControl;
+      const ann = a.announcement || {};
+      const o = cfg.ota || {};
+      document.getElementById('swAnnounce').classList.toggle('on', Boolean(ann.enabled));
+      document.getElementById('annTitleInput').value = ann.title || '';
+      document.getElementById('annTypeInput').value = ann.type || 'info';
+      document.getElementById('annMsgInput').value = ann.message || '';
+      document.getElementById('annBtnInput').value = ann.actionLabel || '';
+      document.getElementById('annUrlInput').value = ann.actionUrl || '';
+      document.getElementById('swMaint').classList.toggle('on', Boolean(a.maintenanceMode));
+      document.getElementById('maintMsgInput').value = a.maintenanceMessage || '';
+
+      document.getElementById('swOta').classList.toggle('on', Boolean(o.enabled));
+      document.getElementById('otaCodeInput').value = o.latestVersionCode ?? 22;
+      document.getElementById('otaNameInput').value = o.latestVersionName || '2.0.2';
+      document.getElementById('otaUrlInput').value = o.apkDownloadUrl || '';
+      document.getElementById('otaNotesInput').value = o.changelog || '';
+      document.getElementById('swForceOta').classList.toggle('on', Boolean(o.forceUpdate));
+      updateBannerPreview();
+    }
+
+    function updateBannerPreview() {
+      const ann = cfg.appControl.announcement || {};
+      document.getElementById('bannerPrevTitle').textContent = ann.title || 'Announcement Preview';
+      document.getElementById('bannerPrevMsg').textContent = ann.message || 'Your live message will appear here...';
+      const b = document.getElementById('bannerPrevBadge');
+      b.textContent = ann.enabled ? 'LIVE' : 'Hidden';
+      b.className = 'hud-pill ' + (ann.enabled ? 'emerald' : 'cyan');
+    }
+
+    async function autoFetchGithubRelease() {
+      toast('Fetching latest release from Tawhid5/Thivo...');
+      try {
+        const res = await fetch('https://api.github.com/repos/Tawhid5/Thivo/releases/latest');
+        if (!res.ok) throw new Error('No published GitHub release found');
+        const rel = await res.json();
+        const tag = (rel.tag_name || '').replace(/^v/i, '') || '2.0.2';
+        const apkAsset = (rel.assets || []).find(a => a.name && a.name.endsWith('.apk')) || rel.assets?.[0];
+        cfg.ota.enabled = true;
+        cfg.ota.latestVersionName = tag;
+        if (apkAsset?.browser_download_url) cfg.ota.apkDownloadUrl = apkAsset.browser_download_url;
+        if (rel.body) cfg.ota.changelog = rel.body;
+        renderControl();
+        setDirty(true);
+        toast(`Loaded release v${tag} from GitHub ✓`);
+      } catch (e) {
+        toast('Release fetch info: ' + e.message);
+      }
+    }
+
+    function updateTelemetryAndJson() {
+      ensureSchema();
+      const sOn = cfg.directSites.filter(s => s.enabled !== false).length;
+      const aOn = cfg.recommendedAddons.filter(a => a.enabled !== false).length;
+      document.getElementById('hudSchema').textContent = 'v' + (cfg.schemaVersion || 20);
+      document.getElementById('hudEngines').textContent = `${sOn} Direct • ${aOn} Addons`;
+      document.getElementById('hudDefaultEngine').textContent = `Default: ${cfg.defaultProviderId || 'rogmovies'}`;
+
+      const c = cfg.catalogControl;
+      const dynRails = (c.curatedRails || []).filter(r => r.enabled !== false).length;
+      const pins = (c.pinnedHeroItems || []).length;
+      document.getElementById('hudCatalog').textContent = `${c.region || 'BD'} • ${c.enableHeroBanner ? 'Hero ON' : 'Hero OFF'}`;
+      document.getElementById('hudDynamicRails').textContent = `${dynRails} dynamic rails • ${pins} pins`;
+
+      document.getElementById('hudStatus').textContent = cfg.appControl.maintenanceMode ? 'Maintenance' : 'All Clear';
+      document.getElementById('hudThemeSub').textContent = `${cfg.appControl.defaultAccentColor || 'ROYAL_GOLD'}`;
+      document.getElementById('jsonBox').textContent = JSON.stringify(cfg, null, 2);
+    }
+
+    function renderUI() {
+      ensureSchema();
+      renderSitesAndAddons();
+      renderPlayer();
+      renderCatalog();
+      renderSubtitles();
+      renderControl();
+      updateTelemetryAndJson();
+    }
+
+    function toB64(str) {
       const bytes = new TextEncoder().encode(str);
       let bin = '';
       for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
       return btoa(bin);
     }
-    function fromBase64Utf8(b64) {
+    function fromB64(b64) {
       const bin = atob(b64.replace(/\s/g, ''));
       const bytes = new Uint8Array(bin.length);
       for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
       return new TextDecoder('utf-8').decode(bytes);
     }
-    function toast(msg) {
-      const el = document.getElementById('toast');
-      el.textContent = msg; el.style.display = 'block';
-      clearTimeout(window._t); window._t = setTimeout(() => el.style.display = 'none', 2800);
-    }
-    function getPath(path) { return path.split('.').reduce((o, k) => o?.[k], cfg); }
-    function setPath(path, val) {
-      const parts = path.split('.');
-      let o = cfg;
-      for (let i = 0; i < parts.length - 1; i++) { o[parts[i]] = o[parts[i]] || {}; o = o[parts[i]]; }
-      o[parts[parts.length - 1]] = val;
-    }
-    function toggleBool(path, el) {
-      const next = !Boolean(getPath(path));
-      setPath(path, next);
-      el.classList.toggle('on', next);
-      renderJsonPreview();
-    }
-    function switchTab(id, btn) {
-      document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
-      document.getElementById('tab-' + id).classList.remove('hidden');
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      if (id === 'json') renderJsonPreview();
+
+    async function loadFromGithub(showMsg = false) {
+      const saved = sGet('thivo_admin_auth');
+      if (saved) { try { auth = Object.assign(auth, JSON.parse(saved)); } catch (e) {} }
+      document.getElementById('ghOwner').value = auth.owner || 'Tawhid5';
+      document.getElementById('ghRepo').value = auth.repo || 'thivo-config';
+      document.getElementById('ghBranch').value = auth.branch || 'main';
+      document.getElementById('ghToken').value = auth.token || '';
+
+      try {
+        if (auth.token) {
+          const res = await fetch(`https://api.github.com/repos/${auth.owner}/${auth.repo}/contents/config.json?ref=${auth.branch}&t=${Date.now()}`, {
+            headers: { Authorization: `Bearer ${auth.token}`, Accept: 'application/vnd.github+json' }
+          });
+          if (res.ok) {
+            const data = await res.json();
+            currentSha = data.sha || '';
+            cfg = JSON.parse(fromB64(data.content));
+            document.getElementById('connPill').textContent = 'GitHub Connected';
+            document.getElementById('connPill').className = 'hud-pill emerald';
+            document.getElementById('hudSyncSub').textContent = 'Synced with GitHub ✓';
+            renderUI(); setDirty(false);
+            if (showMsg) toast('Synced latest config.json from GitHub ✓');
+            return;
+          }
+        }
+        const raw = await fetch(`https://raw.githubusercontent.com/${auth.owner}/${auth.repo}/${auth.branch}/config.json?t=${Date.now()}`);
+        if (raw.ok) {
+          cfg = await raw.json();
+          document.getElementById('connPill').textContent = 'Live Preview';
+          document.getElementById('hudSyncSub').textContent = 'Live Read-Only';
+        }
+      } catch (e) {}
+      renderUI(); setDirty(false);
+      if (showMsg) toast('Config reloaded ✓');
     }
 
-    async function connectGitHub() {
-      auth.owner = document.getElementById('ghOwner').value.trim();
-      auth.repo = document.getElementById('ghRepo').value.trim();
+    async function saveGithubAuth() {
+      auth.owner = document.getElementById('ghOwner').value.trim() || 'Tawhid5';
+      auth.repo = document.getElementById('ghRepo').value.trim() || 'thivo-config';
       auth.branch = document.getElementById('ghBranch').value.trim() || 'main';
       auth.token = document.getElementById('ghToken').value.trim();
-      if (!auth.token) return toast('Please paste your GitHub token');
-      localStorage.setItem('thivo_admin_auth', JSON.stringify(auth));
-      await loadConfig();
+      sSet('thivo_admin_auth', JSON.stringify(auth));
+      toggleGithubBox(false);
+      await loadFromGithub(true);
     }
 
-    function logout() {
-      localStorage.removeItem('thivo_admin_auth');
-      location.reload();
+    function clearGithubAuth() {
+      sDel('thivo_admin_auth');
+      auth.token = '';
+      document.getElementById('ghToken').value = '';
+      toast('Cleared saved GitHub token');
     }
 
-    async function loadConfig() {
+    async function publishToGithub() {
+      if (!auth.token) {
+        toggleGithubBox(true);
+        return toast('Enter your GitHub Personal Access Token first');
+      }
+      const btn = document.getElementById('publishBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Publishing...';
       try {
-        toast('Loading live config...');
-        const url = `https://api.github.com/repos/${auth.owner}/${auth.repo}/contents/config.json?ref=${auth.branch}&_=${Date.now()}`;
-        const r = await fetch(url, { headers: { Authorization: `Bearer ${auth.token}`, Accept: 'application/vnd.github+json' } });
-        if (!r.ok) throw new Error('HTTP ' + r.status + ' — Check token & repo permissions');
-        const data = await r.json();
-        currentSha = data.sha;
-        cfg = JSON.parse(fromBase64Utf8(data.content));
-        ensureDefaults();
-        document.getElementById('loginView').classList.add('hidden');
-        document.getElementById('dashView').classList.remove('hidden');
-        document.getElementById('topActions').classList.remove('hidden');
-        document.getElementById('bottomNav').classList.remove('hidden');
-        renderAll();
-        toast('Live config loaded ✓');
-      } catch (e) {
-        toast('Error: ' + e.message);
-      }
-    }
-
-    function ensureDefaults() {
-      cfg.schemaVersion = Number(cfg.schemaVersion || 1);
-      cfg.updatedAt = cfg.updatedAt || '';
-      cfg.builtInProviders = {
-        cineos: true, stela: true, vz: true, banglaHindiIndex: true, trailerEmbed: true,
-        ...(cfg.builtInProviders || {})
-      };
-      cfg.defaultProviderId = cfg.defaultProviderId || 'cineos';
-      cfg.remoteAddons = Array.isArray(cfg.remoteAddons) ? cfg.remoteAddons : [];
-      cfg.remoteCustomProviders = Array.isArray(cfg.remoteCustomProviders) ? cfg.remoteCustomProviders : [];
-      cfg.playback = {
-        preferredDefaultQuality: '1080p', preferH264OverHevc: true,
-        providerTimeoutSeconds: 7, blockedHosts: [],
-        ...(cfg.playback || {})
-      };
-      cfg.playback.blockedHosts = Array.isArray(cfg.playback.blockedHosts) ? cfg.playback.blockedHosts : [];
-
-      const rawCatalog = cfg.catalog || {};
-      cfg.catalog = {
-        region: 'IN', showHeroCarousel: true, showContinueWatching: true,
-        showTrendingNow: true, showLatestBollywood: true, showHindiWebSeries: true,
-        showSouthHindiDubbed: true, showHollywoodHindiDubbed: true, showTopSeries: true,
-        showKdramaAsian: true, showActionCrime: true, pinnedHeroIds: [],
-        ...rawCatalog,
-        curatedSection: {
-          enabled: false, title: "Editor's Picks", subtitle: 'Handpicked for you', items: [],
-          ...(rawCatalog.curatedSection || {})
+        cfg.schemaVersion = 20;
+        cfg.updatedAt = new Date().toISOString();
+        const url = `https://api.github.com/repos/${auth.owner}/${auth.repo}/contents/config.json`;
+        if (!currentSha) {
+          const gr = await fetch(`${url}?ref=${auth.branch}&t=${Date.now()}`, {
+            headers: { Authorization: `Bearer ${auth.token}`, Accept: 'application/vnd.github+json' }
+          });
+          if (gr.ok) { const gj = await gr.json(); currentSha = gj.sha || ''; }
         }
-      };
-      cfg.catalog.pinnedHeroIds = Array.isArray(cfg.catalog.pinnedHeroIds) ? cfg.catalog.pinnedHeroIds : [];
-      cfg.catalog.curatedSection.items = Array.isArray(cfg.catalog.curatedSection.items) ? cfg.catalog.curatedSection.items : [];
-
-      cfg.subtitles = {
-        openSubtitlesV3: true, openSubtitlesRest: true, subtitleCat: true, yify: true,
-        subdl: true, subsource: true, inStream: true, autoLoadBangla: true,
-        geminiModel: 'gemini-2.5-flash',
-        ...(cfg.subtitles || {})
-      };
-      cfg.announcement = {
-        enabled: false, type: 'info', title: '', message: '', actionLabel: '', actionUrl: '', dismissible: true,
-        ...(cfg.announcement || {})
-      };
-      cfg.appUpdate = {
-        enabled: false, latestVersionCode: 1, minSupportedVersionCode: 0,
-        latestVersionName: '1.0', apkUrl: '', changelog: '', forceUpdate: false,
-        ...(cfg.appUpdate || {})
-      };
-      cfg.maintenance = {
-        enabled: false, title: 'Maintenance in Progress', message: '', supportUrl: '',
-        ...(cfg.maintenance || {})
-      };
-    }
-
-    function normalizeManifestUrl(raw) {
-      let u = raw.trim().replace(/^stremio:\/\//i, 'https://');
-      if (u && !u.endsWith('/manifest.json') && !u.includes('manifest.json')) {
-        u = u.replace(/\/+$/, '') + '/manifest.json';
-      }
-      return u;
-    }
-
-    async function testAddonUrl() {
-      const msgEl = document.getElementById('addonTestMsg');
-      const url = normalizeManifestUrl(document.getElementById('newAddonUrl').value);
-      if (!url) return;
-      document.getElementById('newAddonUrl').value = url;
-      msgEl.textContent = 'Testing manifest...';
-      try {
-        const r = await fetch(url);
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        const m = await r.json();
-        if (!m.name && !m.id) throw new Error('Invalid Stremio manifest JSON');
-        if (!document.getElementById('newAddonName').value.trim()) {
-          document.getElementById('newAddonName').value = m.name || m.id;
+        const body = {
+          message: `Update THIVO v20 config (${cfg.updatedAt})`,
+          content: toB64(JSON.stringify(cfg, null, 2)),
+          branch: auth.branch
+        };
+        if (currentSha) body.sha = currentSha;
+        const r = await fetch(url, {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${auth.token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        if (!r.ok) {
+          const err = await r.json().catch(() => ({}));
+          throw new Error(err.message || `HTTP ${r.status}`);
         }
-        msgEl.textContent = `✓ Online: ${m.name || m.id} (${(m.types || []).join(', ')})`;
+        const res = await r.json();
+        currentSha = res.content?.sha || currentSha;
+        setDirty(false);
+        document.getElementById('hudSyncSub').textContent = 'Published Live ✓';
+        toast('✅ Published config.json live to THIVO App!');
       } catch (e) {
-        msgEl.textContent = `⚠ Browser note: ${e.message} (may still work in Android if CORS blocked)`;
+        toast('❌ Publish failed: ' + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '▲ Publish Live';
       }
     }
 
-    function addAddon() {
-      const url = normalizeManifestUrl(document.getElementById('newAddonUrl').value);
-      const name = document.getElementById('newAddonName').value.trim();
-      const badge = document.getElementById('newAddonBadge').value.trim();
-      if (!url || !name) return toast('Enter both Manifest URL and Name');
-      cfg.remoteAddons.push({
-        id: 'addon_' + Date.now(), name, manifestUrl: url,
-        enabled: true, priority: cfg.remoteAddons.length + 1, badge: badge || 'Official'
-      });
-      document.getElementById('newAddonUrl').value = '';
-      document.getElementById('newAddonName').value = '';
-      document.getElementById('newAddonBadge').value = '';
-      document.getElementById('addonTestMsg').textContent = '';
-      renderAddons(); renderDefaultProviderSelect(); renderJsonPreview();
-      toast('Addon added (tap Publish Live to save)');
-    }
-
-    function moveAddon(idx, dir) {
-      const target = idx + dir;
-      if (target < 0 || target >= cfg.remoteAddons.length) return;
-      [cfg.remoteAddons[idx], cfg.remoteAddons[target]] = [cfg.remoteAddons[target], cfg.remoteAddons[idx]];
-      cfg.remoteAddons.forEach((a, i) => a.priority = i + 1);
-      renderAddons(); renderJsonPreview();
-    }
-
-    function deleteAddon(idx) {
-      const removed = cfg.remoteAddons.splice(idx, 1)[0];
-      if (removed && cfg.defaultProviderId === removed.id) cfg.defaultProviderId = 'cineos';
-      renderAddons(); renderDefaultProviderSelect(); renderJsonPreview();
-    }
-
-    function addCustomProvider() {
-      const name = document.getElementById('custName').value.trim();
-      const url = document.getElementById('custUrl').value.trim();
-      const mode = document.getElementById('custMode').value || 'auto';
-      const jsonPath = document.getElementById('custJsonPath').value.trim();
-      const badge = document.getElementById('custBadge').value.trim();
-      if (!name || !url) return toast('Enter Source Name and Endpoint URL');
-      cfg.remoteCustomProviders.push({
-        id: 'cust_' + Date.now(), name, endpointTemplate: url,
-        enabled: true, badge, mode, jsonUrlFieldPath: jsonPath
-      });
-      document.getElementById('custName').value = '';
-      document.getElementById('custUrl').value = '';
-      document.getElementById('custJsonPath').value = '';
-      document.getElementById('custBadge').value = '';
-      renderCustomProviders(); renderDefaultProviderSelect(); renderJsonPreview();
-      toast('Custom source added (tap Publish Live to save)');
-    }
-
-    function deleteCustomProvider(idx) {
-      const removed = cfg.remoteCustomProviders.splice(idx, 1)[0];
-      if (removed && cfg.defaultProviderId === removed.id) cfg.defaultProviderId = 'cineos';
-      renderCustomProviders(); renderDefaultProviderSelect(); renderJsonPreview();
-    }
-
-    function updateTimeout(val) {
-      const num = Math.max(3, Math.min(20, Number(val || 7)));
-      cfg.playback.providerTimeoutSeconds = num;
-      renderJsonPreview();
-    }
-
-    function updateBlockedHosts() {
-      cfg.playback.blockedHosts = document.getElementById('blockedHostsInput').value
-        .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
-      renderJsonPreview();
-    }
-
-    function updatePinnedHero() {
-      cfg.catalog.pinnedHeroIds = document.getElementById('pinnedHeroInput').value
-        .split(',').map(s => s.trim()).filter(Boolean);
-      renderJsonPreview();
-    }
-
-    function updateCuratedItems() {
-      cfg.catalog.curatedSection.items = document.getElementById('curatedItems').value
-        .split(',').map(s => s.trim()).filter(Boolean);
-      renderJsonPreview();
-    }
-
-    function setGeminiModel(model) {
-      cfg.subtitles.geminiModel = model;
-      document.getElementById('geminiModelInput').value = model;
-      renderJsonPreview();
-    }
-
-    function renderToggleList(containerId, items) {
-      document.getElementById(containerId).innerHTML = items.map(([path, title, desc]) => `
-        <div class="toggle-row">
-          <div><div class="toggle-title">${esc(title)}</div>${desc ? `<div class="toggle-desc">${esc(desc)}</div>` : ''}</div>
-          <div class="switch ${getPath(path) ? 'on' : ''}" onclick="toggleBool('${path}', this)"></div>
-        </div>
-      `).join('');
-    }
-
-    function renderAddons() {
-      document.getElementById('addonCount').textContent = cfg.remoteAddons.length;
-      const list = document.getElementById('addonsList');
-      if (!cfg.remoteAddons.length) {
-        list.innerHTML = '<div style="color:var(--muted);font-size:13px;">No remote addons added yet.</div>';
-        return;
-      }
-      list.innerHTML = cfg.remoteAddons.map((a, i) => `
-        <div class="addon-item">
-          <div class="addon-head">
-            <div class="addon-title">
-              <strong>${esc(a.name)}</strong>
-              ${a.badge ? `<span class="pill">${esc(a.badge)}</span>` : ''}
-              ${cfg.defaultProviderId === a.id ? `<span class="pill star">★ Default</span>` : ''}
-            </div>
-            <div class="switch ${a.enabled ? 'on' : ''}" onclick="cfg.remoteAddons[${i}].enabled=!cfg.remoteAddons[${i}].enabled; renderAddons(); renderJsonPreview()"></div>
-          </div>
-          <div class="addon-url">${esc(a.manifestUrl)}</div>
-          <div class="actions">
-            <button class="btn btn-glass btn-sm" onclick="moveAddon(${i},-1)">▲</button>
-            <button class="btn btn-glass btn-sm" onclick="moveAddon(${i},1)">▼</button>
-            <button class="btn btn-glass btn-sm" onclick="cfg.defaultProviderId='${esc(a.id)}'; renderAddons(); renderCustomProviders(); renderDefaultProviderSelect(); renderJsonPreview()">★ Pin Default</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteAddon(${i})">Delete</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderCustomProviders() {
-      document.getElementById('customCount').textContent = cfg.remoteCustomProviders.length;
-      const el = document.getElementById('customList');
-      if (!cfg.remoteCustomProviders.length) {
-        el.innerHTML = '<div style="color:var(--muted);font-size:12px;">No custom endpoints added yet.</div>';
-        return;
-      }
-      el.innerHTML = cfg.remoteCustomProviders.map((c, i) => `
-        <div class="addon-item">
-          <div class="addon-head">
-            <div class="addon-title">
-              <strong>${esc(c.name)}</strong>
-              <span class="pill">${esc((c.mode || 'auto').toUpperCase())}</span>
-              ${c.badge ? `<span class="pill">${esc(c.badge)}</span>` : ''}
-              ${cfg.defaultProviderId === c.id ? `<span class="pill star">★ Default</span>` : ''}
-            </div>
-            <div class="switch ${c.enabled ? 'on' : ''}" onclick="cfg.remoteCustomProviders[${i}].enabled=!cfg.remoteCustomProviders[${i}].enabled; renderCustomProviders(); renderJsonPreview()"></div>
-          </div>
-          <div class="addon-url">${esc(c.endpointTemplate)}</div>
-          <div class="actions">
-            <button class="btn btn-glass btn-sm" onclick="cfg.defaultProviderId='${esc(c.id)}'; renderAddons(); renderCustomProviders(); renderDefaultProviderSelect(); renderJsonPreview()">★ Pin Default</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteCustomProvider(${i})">Delete</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderDefaultProviderSelect() {
-      const opts = [
-        ['cineos', 'CineOS (Built-in)'],
-        ['stela', 'Stela (Built-in)'],
-        ['vz', 'VZ / VidZee (Built-in)'],
-        ['banglaHindiIndex', 'Bangla & Hindi Index (Built-in)'],
-        ['trailerEmbed', 'Trailer & 3P Embed Backups (Built-in)'],
-        ...cfg.remoteAddons.map(a => [a.id, 'Addon: ' + a.name]),
-        ...cfg.remoteCustomProviders.map(c => [c.id, 'Custom: ' + c.name])
-      ];
-      document.getElementById('defaultProviderSelect').innerHTML = opts.map(([v, l]) =>
-        `<option value="${esc(v)}" ${cfg.defaultProviderId === v ? 'selected' : ''}>${esc(l)}</option>`
-      ).join('');
-    }
-
-    function renderAll() {
-      renderAddons();
-      renderCustomProviders();
-      renderDefaultProviderSelect();
-      renderToggleList('builtInToggles', [
-        ['builtInProviders.cineos', 'CineOS Engine', 'Multi-audio direct MP4/HLS'],
-        ['builtInProviders.stela', 'Stela Resolver', 'Fast direct stream fallback'],
-        ['builtInProviders.vz', 'VZ Resolver', 'Secondary direct stream'],
-        ['builtInProviders.banglaHindiIndex', 'Index RSS Engine', 'Bangla & Hindi mirror links'],
-        ['builtInProviders.trailerEmbed', 'Trailer & 3P Embed Backups', 'YouTube trailers & web embed servers']
-      ]);
-      document.getElementById('prefQuality').value = cfg.playback.preferredDefaultQuality || '1080p';
-      document.getElementById('providerTimeout').value = cfg.playback.providerTimeoutSeconds || 7;
-      document.getElementById('swH264').classList.toggle('on', Boolean(cfg.playback.preferH264OverHevc));
-      document.getElementById('blockedHostsInput').value = (cfg.playback.blockedHosts || []).join(', ');
-
-      document.getElementById('catalogRegion').value = cfg.catalog.region || 'IN';
-      renderToggleList('catalogToggles', [
-        ['catalog.showHeroCarousel', 'Hero Backdrop Carousel'],
-        ['catalog.showContinueWatching', 'Continue Watching'],
-        ['catalog.showTrendingNow', 'Trending Now'],
-        ['catalog.showLatestBollywood', 'Latest Bollywood & Hindi Hits'],
-        ['catalog.showHindiWebSeries', 'Hindi Web Series'],
-        ['catalog.showSouthHindiDubbed', 'South Indian Blockbusters (Hindi Dubbed)'],
-        ['catalog.showHollywoodHindiDubbed', 'Hollywood in Hindi'],
-        ['catalog.showTopSeries', 'Top Series Right Now'],
-        ['catalog.showKdramaAsian', 'K-Drama & Asian Thrillers'],
-        ['catalog.showActionCrime', 'High-Rated Action & Crime']
-      ]);
-      document.getElementById('pinnedHeroInput').value = (cfg.catalog.pinnedHeroIds || []).join(', ');
-      document.getElementById('swCurated').classList.toggle('on', Boolean(cfg.catalog.curatedSection.enabled));
-      document.getElementById('curatedTitle').value = cfg.catalog.curatedSection.title || '';
-      document.getElementById('curatedSub').value = cfg.catalog.curatedSection.subtitle || '';
-      document.getElementById('curatedItems').value = (cfg.catalog.curatedSection.items || []).join(', ');
-
-      renderToggleList('subToggles', [
-        ['subtitles.openSubtitlesV3', 'OpenSubtitles v3'],
-        ['subtitles.openSubtitlesRest', 'OpenSubtitles REST'],
-        ['subtitles.subtitleCat', 'SubtitleCat'],
-        ['subtitles.yify', 'YIFY Subtitles'],
-        ['subtitles.subdl', 'SubDL'],
-        ['subtitles.subsource', 'SubSource'],
-        ['subtitles.inStream', 'In-Stream Captions'],
-        ['subtitles.autoLoadBangla', 'Auto-Load Bangla Subtitle by Default']
-      ]);
-      document.getElementById('geminiModelInput').value = cfg.subtitles.geminiModel || 'gemini-2.5-flash';
-
-      document.getElementById('swAnnounce').classList.toggle('on', Boolean(cfg.announcement.enabled));
-      document.getElementById('swAnnDismiss').classList.toggle('on', cfg.announcement.dismissible !== false);
-      document.getElementById('annType').value = cfg.announcement.type || 'info';
-      document.getElementById('annTitle').value = cfg.announcement.title || '';
-      document.getElementById('annMsg').value = cfg.announcement.message || '';
-      document.getElementById('annBtnLabel').value = cfg.announcement.actionLabel || '';
-      document.getElementById('annBtnUrl').value = cfg.announcement.actionUrl || '';
-
-      document.getElementById('swUpdate').classList.toggle('on', Boolean(cfg.appUpdate.enabled));
-      document.getElementById('updCode').value = cfg.appUpdate.latestVersionCode || 1;
-      document.getElementById('updMinCode').value = cfg.appUpdate.minSupportedVersionCode || 0;
-      document.getElementById('updName').value = cfg.appUpdate.latestVersionName || '';
-      document.getElementById('updUrl').value = cfg.appUpdate.apkUrl || '';
-      document.getElementById('updNotes').value = cfg.appUpdate.changelog || '';
-      document.getElementById('swForceUpd').classList.toggle('on', Boolean(cfg.appUpdate.forceUpdate));
-
-      document.getElementById('swMaint').classList.toggle('on', Boolean(cfg.maintenance.enabled));
-      document.getElementById('maintTitle').value = cfg.maintenance.title || '';
-      document.getElementById('maintMsg').value = cfg.maintenance.message || '';
-      document.getElementById('maintSupport').value = cfg.maintenance.supportUrl || '';
-      renderJsonPreview();
-    }
-
-    function renderJsonPreview() {
-      const ver = cfg.schemaVersion || 1;
-      const badge = document.getElementById('verBadge');
-      badge.textContent = 'v' + ver;
-      badge.classList.remove('hidden');
-      document.getElementById('schemaLabel').textContent = ver;
-      document.getElementById('shaLabel').textContent = currentSha ? currentSha.slice(0, 10) : '-';
-      document.getElementById('jsonPreview').textContent = JSON.stringify(cfg, null, 2);
-    }
-
-    function copyJson() {
+    function copyConfigJson() {
       navigator.clipboard.writeText(JSON.stringify(cfg, null, 2));
-      toast('JSON copied ✓');
+      toast('Copied config.json to clipboard ✓');
     }
 
-    function downloadJson() {
+    function downloadConfigJson() {
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' }));
-      a.download = 'thivo-config-backup.json';
+      a.download = 'config.json';
       a.click();
     }
 
-    async function publishConfig() {
-      const btn = document.getElementById('publishBtn');
-      btn.disabled = true; btn.textContent = 'Publishing...';
-      try {
-        cfg.updatedAt = new Date().toISOString();
-        cfg.schemaVersion = (cfg.schemaVersion || 0) + 1;
-        const body = {
-          message: `Publish THIVO config v${cfg.schemaVersion}`,
-          content: toBase64Utf8(JSON.stringify(cfg, null, 2)),
-          sha: currentSha,
-          branch: auth.branch
-        };
-        const r = await fetch(`https://api.github.com/repos/${auth.owner}/${auth.repo}/contents/config.json`, {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-            Accept: 'application/vnd.github+json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-        });
-        if (r.status === 409) {
-          throw new Error('Config changed on GitHub — tap Refresh first, then Publish again');
-        }
-        if (!r.ok) {
-          const err = await r.json().catch(() => ({}));
-          throw new Error(err.message || ('HTTP ' + r.status));
-        }
-        const res = await r.json();
-        currentSha = res.content.sha;
-        renderJsonPreview();
-        toast(`Published v${cfg.schemaVersion} ✓ Live across apps!`);
-      } catch (e) {
-        cfg.schemaVersion = Math.max(1, (cfg.schemaVersion || 1) - 1);
-        toast('Publish Failed: ' + e.message);
-      } finally {
-        btn.disabled = false; btn.textContent = 'Publish Live';
-      }
+    function copyThisHtmlCode() {
+      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      navigator.clipboard.writeText(html);
+      toast('✅ Full index.html code copied to clipboard!');
     }
 
-    (function init() {
-      const saved = localStorage.getItem('thivo_admin_auth');
-      if (saved) {
-        try {
-          auth = JSON.parse(saved);
-          document.getElementById('ghOwner').value = auth.owner;
-          document.getElementById('ghRepo').value = auth.repo;
-          document.getElementById('ghBranch').value = auth.branch;
-          document.getElementById('ghToken').value = auth.token;
-          if (auth.token) loadConfig();
-        } catch {}
-      }
-    })();
+    function resetAllToDefault() {
+      cfg = {};
+      renderUI();
+      setDirty(true);
+      toast('Reset to clean v20 defaults (0 default addons)');
+    }
+
+    loadFromGithub(false);
   </script>
 </body>
 </html>
