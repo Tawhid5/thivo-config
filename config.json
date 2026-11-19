@@ -1,6 +1,6 @@
 {
   "schemaVersion": 20,
-  "updatedAt": "2026-11-19T06:05:55.487Z",
+  "updatedAt": "2026-11-19T06:07:03.685Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -196,10 +196,10 @@
     "maintenanceMessage": "THIVO is upgrading streaming resolvers. We will be back shortly.",
     "announcement": {
       "id": "notice_v20",
-      "enabled": false,
+      "enabled": true,
       "type": "info",
-      "title": "",
-      "message": "",
+      "title": "Hello",
+      "message": "Welcome ",
       "actionLabel": "",
       "actionUrl": "",
       "dismissible": true
