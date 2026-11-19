@@ -1,6 +1,6 @@
 {
   "schemaVersion": 20,
-  "updatedAt": "2026-11-19T11:12:51.026Z",
+  "updatedAt": "2026-11-19T11:13:10.898Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -106,30 +106,7 @@
       "tag": "Bangla / Dual"
     }
   ],
-  "recommendedAddons": [
-    {
-      "id": "torrentio",
-      "name": "Torrentio",
-      "manifestUrl": "https://torrentio.strem.fun/manifest.json",
-      "description": "4K & 1080p global streams",
-      "tag": "4K / Multi",
-      "enabled": true,
-      "isDefault": true,
-      "forceUpdateUrl": true,
-      "priority": 1
-    },
-    {
-      "id": "mediafusion",
-      "name": "MediaFusion ElfHosted",
-      "manifestUrl": "https://mediafusion.elfhosted.com/manifest.json",
-      "description": "Hindi, Bangla & global streams",
-      "tag": "Hindi / Global",
-      "enabled": true,
-      "isDefault": true,
-      "forceUpdateUrl": true,
-      "priority": 2
-    }
-  ],
+  "recommendedAddons": [],
   "playbackPolicy": {
     "defaultPreferredQuality": "1080p",
     "smartTimeoutEnabled": true,
