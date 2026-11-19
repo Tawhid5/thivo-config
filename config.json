@@ -1,6 +1,6 @@
 {
   "schemaVersion": 20,
-  "updatedAt": "2026-11-19T07:04:41.206Z",
+  "updatedAt": "2026-11-19T07:38:06.985Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -136,7 +136,7 @@
     "deadMirrorCutoffMs": 4500,
     "maxSlowBufferGraceMs": 20000,
     "maxConcurrentStreamRequests": 4,
-    "enableOfflineDownloads": false,
+    "enableOfflineDownloads": true,
     "maxConcurrentDownloads": 2,
     "downloadChunksPerFile": 4,
     "enableTrailers": true,
