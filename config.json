@@ -1,6 +1,6 @@
 {
   "schemaVersion": 20,
-  "updatedAt": "2026-11-19T06:10:27.813Z",
+  "updatedAt": "2026-11-19T06:10:37.353Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -77,7 +77,7 @@
       "id": "rogmovies",
       "name": "RogMovies",
       "baseUrl": "https://rogmovies.cyou/",
-      "enabled": true,
+      "enabled": false,
       "priority": 1,
       "tag": "Dual Audio / Hindi"
     },
@@ -85,7 +85,7 @@
       "id": "vegamovies",
       "name": "VegaMovies",
       "baseUrl": "https://vegamovies.lease/",
-      "enabled": true,
+      "enabled": false,
       "priority": 2,
       "tag": "4K / 1080p / Dual"
     },
@@ -93,7 +93,7 @@
       "id": "hdhub4u",
       "name": "HDHub4u",
       "baseUrl": "https://new15.hdhub4u.cl/",
-      "enabled": true,
+      "enabled": false,
       "priority": 3,
       "tag": "Bollywood / South"
     },
@@ -101,7 +101,7 @@
       "id": "movielinkbd",
       "name": "MovieLinkBD",
       "baseUrl": "https://x7ykrg.movielinkbd.at/",
-      "enabled": true,
+      "enabled": false,
       "priority": 4,
       "tag": "Bangla / Dual"
     }
