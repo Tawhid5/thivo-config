@@ -1,6 +1,6 @@
 {
   "schemaVersion": 20,
-  "updatedAt": "2026-11-19T07:38:06.985Z",
+  "updatedAt": "2026-11-19T11:12:51.026Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -143,6 +143,7 @@
     "enableMiniPlayer": true
   },
   "catalogControl": {
+    "region": "BD",
     "enableHeroBanner": true,
     "heroAutoRotateSec": 7,
     "enableCinemetaCharts": true,
@@ -196,7 +197,7 @@
     "maintenanceMessage": "THIVO is upgrading streaming resolvers. We will be back shortly.",
     "announcement": {
       "id": "notice_v20",
-      "enabled": true,
+      "enabled": false,
       "type": "info",
       "title": "Hello",
       "message": "Welcome ",
