@@ -1,6 +1,6 @@
 {
   "schemaVersion": 20,
-  "updatedAt": "2026-11-19T06:14:10.283Z",
+  "updatedAt": "2026-11-19T06:14:57.956Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -135,7 +135,7 @@
       "manifestUrl": "https://cncverse.dpdns.org/u/p_2tsnrc8tuym1/manifest.json",
       "description": "cncverse Stremio Addon",
       "tag": "Remote",
-      "enabled": true,
+      "enabled": false,
       "isDefault": true,
       "forceUpdateUrl": true,
       "priority": 3
