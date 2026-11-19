@@ -1,6 +1,6 @@
 {
   "schemaVersion": 20,
-  "updatedAt": "2026-11-19T06:10:37.353Z",
+  "updatedAt": "2026-11-19T06:11:19.624Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -113,7 +113,7 @@
       "manifestUrl": "https://torrentio.strem.fun/manifest.json",
       "description": "4K & 1080p global streams",
       "tag": "4K / Multi",
-      "enabled": false,
+      "enabled": true,
       "isDefault": true,
       "forceUpdateUrl": true,
       "priority": 1
@@ -124,7 +124,7 @@
       "manifestUrl": "https://mediafusion.elfhosted.com/manifest.json",
       "description": "Hindi, Bangla & global streams",
       "tag": "Hindi / Global",
-      "enabled": false,
+      "enabled": true,
       "isDefault": true,
       "forceUpdateUrl": true,
       "priority": 2
