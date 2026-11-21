@@ -1,6 +1,6 @@
 {
   "schemaVersion": 20,
-  "updatedAt": "2026-11-21T10:36:02.317Z",
+  "updatedAt": "2026-11-21T17:26:15.641Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -107,17 +107,6 @@
     }
   ],
   "recommendedAddons": [
-    {
-      "id": "remote_addon_pengu",
-      "name": "pengu",
-      "manifestUrl": "https://pengu.uk/%7B%22auth_token%22%3A%22ZDOG9eUgBjp7AK_gwSpTKHYccTmKD0oVPnzpTQZdzaM%22%7D/manifest.json",
-      "description": "pengu Stremio Addon",
-      "tag": "Stremio",
-      "enabled": true,
-      "isDefault": true,
-      "forceUpdateUrl": true,
-      "priority": 1
-    },
     {
       "id": "remote_addon_cncverse",
       "name": "cncverse",
