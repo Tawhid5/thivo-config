@@ -1,6 +1,6 @@
 {
   "schemaVersion": 20,
-  "updatedAt": "2026-11-21T17:26:15.641Z",
+  "updatedAt": "2026-11-21T17:28:53.991Z",
   "builtInProviders": {
     "cineos": true,
     "stela": false,
@@ -123,6 +123,17 @@
       "name": "plaviohd",
       "manifestUrl": "https://hd.plavio.site/u/ic4BQwqsOY49qajjEi2-WQ/manifest.json",
       "description": "plaviohd Stremio Addon",
+      "tag": "Stremio",
+      "enabled": true,
+      "isDefault": true,
+      "forceUpdateUrl": true,
+      "priority": 3
+    },
+    {
+      "id": "remote_addon_penguplay",
+      "name": "PenguPlay",
+      "manifestUrl": "https://pengu.uk/%7B%22auth_token%22%3A%22ZDOG9eUgBjp7AK_gwSpTKHYccTmKD0oVPnzpTQZdzaM%22%7D/manifest.json",
+      "description": "PenguPlay Stremio Addon",
       "tag": "Stremio",
       "enabled": true,
       "isDefault": true,
